@@ -37,7 +37,7 @@ add_executable(GPA_Calculator
     registration.qrc
     signin_dialog.h signin_dialog.cpp signin_dialog.ui
     student_profile_dialog.h student_profile_dialog.cpp student_profile_dialog.ui
-    subject.h subject.cpp
+    subject.h
     icons.qrc
 
     administration.h administration.cpp
