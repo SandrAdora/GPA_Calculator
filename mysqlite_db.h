@@ -19,8 +19,8 @@ public:
      MySqlite_db* get_instance();  // instance Method
 
      // Method to create the database
-     void create_student_table();
-     void create_subject_table();
+    void create_student_table();
+    void create_subject_table();
 
     // funtions
     
