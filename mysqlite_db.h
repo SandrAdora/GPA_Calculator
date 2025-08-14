@@ -23,6 +23,7 @@ public:
      void create_subject_table();
 
     // funtions
+    
     bool insert_student(QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
     Student* get_student(int); // return the infos of a specific student
     bool delete_student(int); // id
