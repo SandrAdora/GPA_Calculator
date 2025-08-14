@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>documentation/logos/GPA-Calculator-2.png</file>
+        <file>documentation/logos/GPA-calculator.png</file>
+        <file>documentation/logos/gpa_logo.jpg</file>
+    </qresource>
+</RCC>

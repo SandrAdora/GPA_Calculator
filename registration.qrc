@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>documentation/logos/add_user.pmg.jpg</file>
+        <file>documentation/logos/signUp.png</file>
+    </qresource>
+</RCC>

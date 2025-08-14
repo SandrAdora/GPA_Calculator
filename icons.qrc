@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>documentation/logos/Delete-Icon-Transparent-PNG.png</file>
+        <file>documentation/logos/insert-icon-17.jpg</file>
+        <file>documentation/logos/signout.png</file>
+        <file>documentation/logos/save_changes.jpg</file>
+        <file>documentation/logos/signIn.jpg</file>
+        <file>documentation/logos/GPA-Calculator-2.png</file>
+    </qresource>
+</RCC>
