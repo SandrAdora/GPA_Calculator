@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets Sql REQUIRED)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets Sql )
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Sql REQUIRED)
 
 enable_testing()
@@ -17,52 +17,36 @@ enable_testing()
 
 
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(GPA_Calculator
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        person.h
-        student.h student.cpp
-        Person.cpp
 
-        gpa.qrc
-        gpa.qrc
-        gpa.qrc
-        registration_dialog.h registration_dialog.cpp registration_dialog.ui
+add_executable(GPA_Calculator
+    #MANUAL_FINALIZATION
+    #${PROJECT_SOURCES}
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+    person.h Person.cpp
+    student.h student.cpp
+    
 
-        registration.qrc
-        signin_dialog.h signin_dialog.cpp signin_dialog.ui
-        student_profile_dialog.h student_profile_dialog.cpp student_profile_dialog.ui
-        subject.h subject.cpp
-        icons.qrc
+    gpa.qrc
+    gpa.qrc
+    gpa.qrc
+    registration_dialog.h registration_dialog.cpp registration_dialog.ui
 
-        administration.h administration.cpp
-        mainwindow.h mainwindow.cpp mainwindow.ui
-        mysqlite_db.h mysqlite_db.cpp
-        Gpa.qrc
+    registration.qrc
+    signin_dialog.h signin_dialog.cpp signin_dialog.ui
+    student_profile_dialog.h student_profile_dialog.cpp student_profile_dialog.ui
+    subject.h subject.cpp
+    icons.qrc
 
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET GPA_Calculator APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(GPA_Calculator SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(GPA_Calculator
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+    administration.h administration.cpp
+    mainwindow.h mainwindow.cpp mainwindow.ui
+    mysqlite_db.h mysqlite_db.cpp
+    Gpa.qrc
+
+)
+
 
 #target_link_libraries(GPA_Calculator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
@@ -71,6 +55,7 @@ target_link_libraries(GPA_Calculator PUBLIC
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Sql
         Qt6::Core
+        Qt6::Sql
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
