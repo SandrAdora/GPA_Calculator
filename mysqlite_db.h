@@ -35,7 +35,7 @@ public:
 
 
 private:
-    MySqlite_db* instance; // singleton, instance
+    static MySqlite_db* instance; // singleton, instance
     QSqlDatabase db_connection; // database connection
 };
 
