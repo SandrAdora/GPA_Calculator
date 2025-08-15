@@ -74,7 +74,6 @@ void MainWindow::on_pushButton_calculate_gpa_clicked()
 
 
 
-
 void MainWindow::on_actiondelete_triggered()
 {
     QString empty_str = "";
@@ -99,3 +98,6 @@ void MainWindow::on_actionregistration_triggered()
     reg->show();
 }
 
+void MainWindow::on_action_password_triggered(){
+    hide();
+}

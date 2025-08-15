@@ -3,4 +3,7 @@
         <file>documentation/logos/add_user.pmg.jpg</file>
         <file>documentation/logos/signUp.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>documentation/logos/adminstrator.png</file>
+    </qresource>
 </RCC>

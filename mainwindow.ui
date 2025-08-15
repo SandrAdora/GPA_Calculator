@@ -118,18 +118,25 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menumenu">
     <property name="title">
-     <string>LOGIN</string>
+     <string>Login</string>
     </property>
     <addaction name="actiondelete"/>
     <addaction name="actionsignIn"/>
     <addaction name="actionregistration"/>
    </widget>
+   <widget class="QMenu" name="menuAdmin">
+    <property name="title">
+     <string>Admin</string>
+    </property>
+    <addaction name="actioninsert_worker_password"/>
+   </widget>
    <addaction name="menumenu"/>
+   <addaction name="menuAdmin"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actiondelete">
@@ -157,6 +164,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>registration</string>
+   </property>
+  </action>
+  <action name="actioninsert_worker_password">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::FormatJustifyCenter"/>
+   </property>
+   <property name="text">
+    <string>password</string>
    </property>
   </action>
  </widget>

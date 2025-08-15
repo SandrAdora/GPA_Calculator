@@ -4,8 +4,10 @@
 #include <vector>
 #include <QString>
 #include <QDate>
+
 #include "student.h"
-#include <QString>
+#include "subject.h"
+
 
 using namespace std;
 using str = QString;
@@ -21,36 +23,15 @@ enum MethodType {
 
 
 
-class Subject: public Student
-{
-public:
-    Subject();
-    Subject(str, int, float);
-    Subject(str, float);
-    Subject(str);
-
-    void set_subject(str);
-    str get_subject() const;
-    void set_ects(int);
-    float get_ects()const;
-    void set_weights(int);
-    int get_weights() const;
-    int get_sub_id() const;
-
-private:
-    str subName;
-    float ects;
-    int weights;
-    int sub_id;
-
-};
 
 // factory method class
-class Administration : public Subject
+class Administration : public Student
 {
 public:
-    Administration();
-    Student* FactoryMethod(){ // Factory method as an interface for person and student
+    static Administration* Instance();
+
+
+    Person* FactoryMethod(){ // Factory method as an interface for person and student
 
         if (type == MethodType::student){
             return new Student();
@@ -62,8 +43,8 @@ public:
     auto* create_object(MethodType& );
 
     void add_student(QString &, QDate &, QString&, QString&, QString&);
-    void add_new_subjects(QString, int, double); // name of subject, ects and weights of each subjects
-    bool delete_subject(int);
+    void add_new_subjects(QString&, int&, double&); // name of subject, ects and weights of each subjects
+    bool delete_subject(int&);
     void view_all_subjects() const;
     bool delete_student(int &);
     void display_all_Students() const;
@@ -72,6 +53,10 @@ public:
     bool update_subject_ect(int&, int);
     bool update_subject_name(int&, QString&);
     bool update_subject_weights(int& ,double);
+
+protected:
+    Administration();
+
 
 
 
@@ -82,6 +67,7 @@ private:
     std::vector<Subject*> subjects;
     Student* ptr;
     Subject* sub_ptr;
+    static Administration* _instance;
 
 };
 

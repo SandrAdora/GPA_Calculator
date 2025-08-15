@@ -45,6 +45,9 @@ add_executable(GPA_Calculator
     mysqlite_db.h mysqlite_db.cpp
     Gpa.qrc
     subject.cpp
+    admin.h admin.cpp
+    admin_signIn_dialog.h admin_signIn_dialog.cpp admin_signIn_dialog.ui
+
 
 )
 

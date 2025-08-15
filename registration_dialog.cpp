@@ -1,6 +1,7 @@
 #include "registration_dialog.h"
 #include "ui_registration_dialog.h"
 #include "signin_dialog.h"
+#include "administration.h"
 #include <QMessageBox>
 
 registration_Dialog::registration_Dialog(QWidget *parent)
@@ -26,6 +27,7 @@ void registration_Dialog::on_pushButton_clicked()
     QString gender = ui->comboBox_gender->currentText();
     QString email = ui->lineEdit_email->text();
     QString password = ui->lineEdit_password->text();
+
 
 
 
