@@ -4,7 +4,7 @@
             "name": "qt6",
             "includePath": [
                 "${workspaceFolder}/", 
-                "C:/msys64/mingw64/include"
+                "C:/Qt/6.9.1/mingw_64/include"
             ],
             "cppStandard": "c++17",
             "configurationProvider": "ms-vscode.cmake-tools"

@@ -2,9 +2,11 @@
 #define SUBJECT_H
 
 #include <QString>
+#include "student.h"
 
 using str = QString;
-class Subject
+
+class Subject: public Student
 {
 public:
     Subject();
@@ -20,15 +22,11 @@ public:
     int get_weights() const;
     int get_sub_id() const;
 
-
-
-
 private:
     str subName;
     float ects;
     int weights;
-    int sub_id = -1;
-
+    int sub_id;
 
 };
 

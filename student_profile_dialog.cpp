@@ -7,6 +7,7 @@
 #include <QAction>
 #include <QScrollArea>
 #include "signin_dialog.h"
+
 student_profile_Dialog::student_profile_Dialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::student_profile_Dialog)
