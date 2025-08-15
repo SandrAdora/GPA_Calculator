@@ -6,7 +6,8 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QDebug>
-#include "administration.h"
+
+#include "student.h"
 
 
 using str = QString;

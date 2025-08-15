@@ -19,3 +19,23 @@ Person::Person(QString name, QDate d, Gender g, QString em, QString pw){
     this->gender = g;
     this->password = pw;
 }
+QString Person::convertToString(Gender gen){
+
+    if (gen == Gender::FEAMALE){
+        return "female";
+    }else if (gen == Gender::MALE){
+        return "male";
+    }else if(gen == Gender::DONT_DISCLOSE){
+        return "dont disclose";
+    }
+    return ""; // return empty string if no input match
+}
+Gender Person::convertStringToInt(QString& gen){
+    if(gen == "male")
+        return Gender::MALE;
+    else if(gen == "female")
+        return Gender::FEAMALE;
+    else
+        return Gender::DONT_DISCLOSE;
+    return Gender::NOTHING;
+}

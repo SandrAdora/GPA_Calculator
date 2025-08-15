@@ -8,6 +8,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets Sql )
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Sql REQUIRED)
@@ -32,7 +33,9 @@ add_executable(GPA_Calculator
     gpa.qrc
     gpa.qrc
     gpa.qrc
-    registration_dialog.h registration_dialog.cpp registration_dialog.ui
+    registration_dialog.h 
+    registration_dialog.cpp 
+    registration_dialog.ui
 
     registration.qrc
     signin_dialog.h signin_dialog.cpp signin_dialog.ui
@@ -44,10 +47,6 @@ add_executable(GPA_Calculator
     mainwindow.h mainwindow.cpp mainwindow.ui
     mysqlite_db.h mysqlite_db.cpp
     Gpa.qrc
-    subject.cpp
-    admin.h admin.cpp
-    admin_signIn_dialog.h admin_signIn_dialog.cpp admin_signIn_dialog.ui
-
 
 )
 

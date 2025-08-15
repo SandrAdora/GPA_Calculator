@@ -7,6 +7,7 @@
 
 #include "student.h"
 #include "subject.h"
+#include "admin.h"
 
 
 using namespace std;
@@ -44,7 +45,7 @@ public:
 
     void add_student(QString &, QDate &, QString&, QString&, QString&);
     void add_new_subjects(QString&, int&, double&); // name of subject, ects and weights of each subjects
-    bool delete_subject(int&);
+    bool delete_subject(int);
     void view_all_subjects() const;
     bool delete_student(int &);
     void display_all_Students() const;

@@ -21,6 +21,9 @@ public:
     Person(QString em, QString pw);
     Person(QString, QDate, Gender, QString, QString);
 
+    QString convertToString(Gender gen);
+    Gender convertStringToInt(QString& gen);
+
 
 
     // Getter & Setter Methods
