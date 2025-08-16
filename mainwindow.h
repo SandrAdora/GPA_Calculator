@@ -26,7 +26,7 @@ public:
 
 private slots:
 
-
+// menu bar
     void on_pushButton_calculate_gpa_clicked();
 
     void on_actiondelete_triggered();
@@ -34,6 +34,7 @@ private slots:
     void on_actionsignIn_triggered();
 
     void on_actionregistration_triggered();
+
     void on_action_password_triggered();
 
 private:

@@ -5,17 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "qt6", 
+            "name": "qt6",
             "type": "cppvsdbg",
-            "request": "launch", 
-            // Resolved by cmake tools:
+            "request": "launch",
             "program": "${command: cmake.launchTargetPath}",
             "cwd": "${command: cmake.launchTargetDirectory}",
-            "visualizerFile": "${workspaceFolder}/qt6.natvis",
-            
+            "visualizerFile": "c:\\Users\\sandr\\AppData\\Roaming\\Code\\User\\workspaceStorage\\01bedaeef443d78b422bf82eb2d2479d\\tonka3000.qtvsctools\\qt.natvis.xml",
             "sourceFileMap": {
-                "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator": "${workspaceFolder}",
-
+                "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator": "${workspaceFolder}"
             }
         }
     ]

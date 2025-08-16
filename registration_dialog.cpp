@@ -18,26 +18,7 @@ registration_Dialog::~registration_Dialog()
     delete ui;
 }
 
-void registration_Dialog::on_pushButton_clicked()
-{
-    QMessageBox::information(this, "Registration", "was successfull");
 
-    QString major = ui->comboBox_courses->currentText();
-    QString fullname = ui->lineEdit_fullname->text();
-    QString gender = ui->comboBox_gender->currentText();
-    QString email = ui->lineEdit_email->text();
-    QString password = ui->lineEdit_password->text();
-
-
-
-
-
-    signIn = new signIn_Dialog(this);
-    signIn->show();
-
-
-
-}
 
 
 // Populating Comboboxes
@@ -85,5 +66,33 @@ void registration_Dialog::populateComboGender()
 {
     getGenders();
     ui->comboBox_gender->addItems(genderList);
+}
+
+
+void registration_Dialog::on_pushButton_signUp_clicked()
+{
+    QMessageBox::information(this, "Registration", "was successfull");
+
+    QString major = ui->comboBox_courses->currentText();
+    QString fullname = ui->lineEdit_fullname->text();
+    QString gender = ui->comboBox_gender->currentText();
+    QString email = ui->lineEdit_email->text();
+    QString password = ui->lineEdit_password->text();
+
+
+
+
+
+    signIn = new signIn_Dialog(this);
+    signIn->show();
+
+
+
+}
+
+
+void registration_Dialog::on_pushButton_cancel_clicked()
+{
+
 }
 

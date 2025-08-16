@@ -14,3 +14,6 @@ bool Admin::admin_(str input){
     }
     return false;
 }
+str Admin::get_it_admin_password() const {
+    return this->admin_password;
+}

@@ -2,8 +2,9 @@
 #define ADMIN_H
 
 #include "person.h"
-#include "mysqlite_db.h"
-#include "administration.h"
+
+
+
 #include <QString>
 
 using str = QString;
@@ -13,23 +14,35 @@ public:
     Admin();
 
 
+
+    // methods from super class
     // Redefination of methods from the super class
-    void set_fullname(QString name) override { this->fullname = name;}
-    void set_birthdate(QDate date) override {this->birthdate = date; }
-    void set_password(QString pw) override {this->password = pw;}
-    void set_email(QString em) override{this->email = em;}
-    void set_gender(QString gen) override {this->gender= convertStringToInt(gen);}
-    QString get_fullname() const override {return this->fullname;}
-    QString get_email() const override{return this->email;}
-    QString get_password() const override {return this->password;}
-    QDate get_birthdate() const override{return this->birthdate;}
-    Gender get_gender() const override {return this->gender;}
+    void set_fullname(QString name) override { fullname = name;}
+    void set_birthdate(QDate date) override {birthdate = date; }
+    void set_password(QString pw) override {password = pw;}
+    void set_email(QString em) override{email = em;}
+    void set_gender(QString gen) override {gender= convertStringToInt(gen);}
+    QString get_fullname() const override {return fullname;}
+    QString get_email() const override{return email;}
+    QString get_password() const override {return password;}
+    QDate get_birthdate() const override{return birthdate;}
+    Gender get_gender() const override {return gender;}
 
 
-    bool admin_(str); // checks if password correspond with the it password
-private:
+    // Getter methods
+    str get_it_admin_password() const;
+    int get_admin_id() const;
+
+
+
+
+
+
+
+    bool admin_(str); // checks if password correspond with the IT password
+protected:
     int admin_id;
-    str admin_password;
+    str admin_password; // IT password which is already fix
 };
 
 #endif // ADMIN_H

@@ -4,14 +4,18 @@
 #include <vector>
 #include <QString>
 #include <QDate>
+#include <memory>
+#include <exception>
 
 #include "student.h"
 #include "subject.h"
 #include "admin.h"
 
 
+
 using namespace std;
 using str = QString;
+
 /*
  * @brief Class Administration uses Factory method as interface between person and student
  * @param none
@@ -19,55 +23,61 @@ using str = QString;
  */
 // method type to create when using factory method
 enum MethodType {
-    student, admin, worker_student, subject
+    student, admin
 };
 
 
-
+// responsible for creating and returning the type of person on demand
+class Factory
+{
+    Person* create(MethodType t)
+    {
+        switch (t) {
+        case MethodType::admin:
+            return new Admin();
+        case MethodType::student:
+            return new Student();
+        default:
+            break;
+        }
+    }
+};
 
 // factory method class
 class Administration : public Student
 {
 public:
-    static Administration* Instance();
+    static Administration* Instance(); // Instance
+
+    unique_ptr<Person> FactoryMethod(); // factory method for creating different obj. like student or admin
 
 
-    Person* FactoryMethod(){ // Factory method as an interface for person and student
+    unique_ptr<Person> create_object(MethodType& ); // call factory method and returns requested obj
 
-        if (type == MethodType::student){
-            return new Student();
-        }else if(type == MethodType::subject){
-            return new Subject();
-        }
-        return nullptr;//other methodtype can be subsequently added if necessary
-    }
-    auto* create_object(MethodType& );
-
-    void add_student(QString &, QDate &, QString&, QString&, QString&);
+    void add_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email and password
     void add_new_subjects(QString&, int&, double&); // name of subject, ects and weights of each subjects
-    bool delete_subject(int);
+    bool delete_subject(int); // id of subject to be deleted
     void view_all_subjects() const;
-    bool delete_student(int &);
+    bool delete_student(int &); // id of student to be deleted
     void display_all_Students() const;
-    bool update_student_name(int&, QString);
+    bool update_student_name(int&, QString); // id of student and what operation should be done
+    bool update_subject_ect(int&, int); // id and ect
+    bool update_subject_name(int&, QString&); // id and name of the object
+    bool update_subject_weights(int& ,double); // id and new weights for subject
 
-    bool update_subject_ect(int&, int);
-    bool update_subject_name(int&, QString&);
-    bool update_subject_weights(int& ,double);
+    // unequal operator
+
+
+
 
 protected:
     Administration();
 
-
-
-
-
 private:
-    std::vector<Student*>students;
+    std::vector<std::unique_ptr<Student>>students;
     MethodType type;
     std::vector<Subject*> subjects;
-    Student* ptr;
-    Subject* sub_ptr;
+    unique_ptr<Person> ptr;
     static Administration* _instance;
 
 };

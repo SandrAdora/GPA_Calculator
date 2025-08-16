@@ -6,15 +6,28 @@
 
 Administration::Administration() {}
 
-auto* Administration::create_object(MethodType& t){
+
+unique_ptr<Person> Administration::FactoryMethod()
+{
+    switch (this->type) {
+    case MethodType::admin:
+        return make_unique<Admin>();
+    case MethodType::student:
+        return make_unique<Student>();
+    default:
+        break;
+    }
+}
+unique_ptr<Person> Administration::create_object(MethodType& t){
     this->type = t;
     return this->FactoryMethod();
 }
 
-void Administration::add_student(QString &name, QDate &geb, QString&gen, QString& em, QString& ps){
+
+void Administration::add_student(Courses& course, QString &name, QDate &geb, QString&gen, QString& em, QString& ps){
 
     if(ptr == nullptr){
-        this->type = MethodType::student;
+        this->type = MethodType::student;     
         ptr = this->create_object(type);
     }
     ptr->set_fullname(name);
@@ -22,6 +35,9 @@ void Administration::add_student(QString &name, QDate &geb, QString&gen, QString
     ptr->set_email(em);
     ptr->set_password(ps);
     ptr->set_gender(gen);
+
+    unique_ptr<Student> sptr(dynamic_cast<Student*>(ptr.release())); //Safe downcast: because student inheritsfrom person, using dynamic cast on the pointer and wrapp it aoround an new unique pointer
+    sptr->set_course(course);
 
     // adding new student into the database
     const str table_name = "student";
@@ -37,13 +53,13 @@ void Administration::add_student(QString &name, QDate &geb, QString&gen, QString
 
 
 
-    students.push_back( new Student(*ptr)); // adds a new student to the vector using the same singleton pointer
-
-
+    students.push_back(move(sptr)); // adds a new student to the vector using the same singleton pointer
+    // since downcast ptr now belongst to sptr must be reseted in order to be used again
+    ptr.reset();
 
 }
-void Administration::add_new_subjects(QString name, int e, double w){
-    Subject *sub = new Subject(name, e, w);
+void Administration::add_new_subjects(QString& name, int& e, double& w){
+  //  Subject *sub = new Subject(name, e, w);
 
     // add the new obj in the vector list
 } // name of subject, ects and weights of each subjects

@@ -17,7 +17,9 @@ public:
     ~registration_Dialog();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_cancel_clicked();
+
+    void on_pushButton_signUp_clicked();
 
 private:
     Ui::registration_Dialog *ui;

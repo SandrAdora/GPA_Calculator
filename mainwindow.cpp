@@ -78,7 +78,6 @@ void MainWindow::on_actiondelete_triggered()
 {
     QString empty_str = "";
     ui->lineEdit_input_grades->setText(empty_str);
-
 }
 
 

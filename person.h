@@ -1,7 +1,7 @@
 #ifndef PERSON_H
 #define PERSON_H
 
-#endif // PERSON_H
+
 
 // Include libs
 #include <QString>
@@ -39,10 +39,6 @@ public:
     virtual QDate get_birthdate() const  = 0;
     virtual  Gender get_gender() const = 0;
 
-
-
-
-
 protected:
 
     QString fullname;
@@ -52,3 +48,4 @@ protected:
     QString password;
 
 };
+#endif // PERSON_H
