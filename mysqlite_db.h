@@ -38,7 +38,7 @@ public:
     bool insert_student(QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
     sql get_student_infos(int); // return the infos of a specific student
     bool delete_student(int); // id
-    book update_student(int, QString); // id and 2nd var. should be what chould be updated
+    bool update_student(int, QString); // id and 2nd var. should be what chould be updated
     bool insert_subject(str, int, float); // name of the subject, weights of each subject and ects.
     bool instert_new_admin(str&); // full name of a new admin
 
