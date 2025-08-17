@@ -35,6 +35,7 @@ public:
 
     // Operations 
     bool insert_student(QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
+<<<<<<< HEAD
     Student* get_student(int&); // return the infos of a specific student
     bool delete_student(int&); // id
     void update_student(int&, QString&); // 2nd var. should be what chould be updated
@@ -47,6 +48,20 @@ public:
     query get_student_subjects(int&) const;
     query get_admins() const;
     
+=======
+    sql get_student_infos(int); // return the infos of a specific student
+    bool delete_student(int); // id
+    bool update_student(int, QString); // id and 2nd var. should be what chould be updated
+    bool insert_subject(str, int, float); // name of the subject, weights of each subject and ects.
+    bool instert_new_admin(str&); // full name of a new admin
+
+    sql get_students() const;
+    sql get_student(int&);
+    sql get_subjects() const;
+    sql get_student_subjects() const;
+    sql get_admins() const;
+    sql get_subject_infos(int&) const;
+>>>>>>> a199e0310c400e35b0f1344f3ce6ffeb66b9b5f3
 
 
 

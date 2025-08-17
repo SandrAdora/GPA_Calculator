@@ -21,8 +21,6 @@ MySqlite_db::~MySqlite_db(){
         delete instance;
         instance = nullptr;
     }
-
-
 }
 
 MySqlite_db::MySqlite_db(){
