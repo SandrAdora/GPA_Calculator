@@ -14,7 +14,7 @@
 
 
 using str = QString;
-using sql = QSqlQuery;
+using query = QSqlQuery;
 using Db = QSqlDatabase;
 
 class MySqlite_db
@@ -25,9 +25,8 @@ public:
      MySqlite_db* get_instance();  // instance Method
     ~MySqlite_db();
 
-     // Method to create the database
-    void create_student_table();
-    void create_subject_table();
+     // Method to create the database table
+    str create_tables();
 
 
     // Build Connection to existing database 
@@ -36,17 +35,18 @@ public:
 
     // Operations 
     bool insert_student(QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
-    Student* get_student(int); // return the infos of a specific student
-    bool delete_student(int); // id
-    void update_student(int, QString); // 2nd var. should be what chould be updated
-    bool insert_subject(str, int, float); // name of the subject, weights of each subject and ects.
+    Student* get_student(int&); // return the infos of a specific student
+    bool delete_student(int&); // id
+    void update_student(int&, QString&); // 2nd var. should be what chould be updated
+    bool insert_subject(str&, int&, float&); // name of the subject, weights of each subject and ects.
     bool instert_new_admin(str&); // full name of a new admin
 
-    sql get_students() const;
-    sql get_student(int&);
-    sql get_subjects() const;
-    sql get_student_subjects() const;
-    sql get_admins() const;
+    query get_students() const;
+    query get_student_info(int&);
+    query get_subjects() const;
+    query get_student_subjects(int&) const;
+    query get_admins() const;
+    
 
 
 

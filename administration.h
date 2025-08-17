@@ -5,7 +5,7 @@
 #include <QString>
 #include <QDate>
 #include <memory>
-#include <exception>
+
 
 #include "student.h"
 #include "subject.h"

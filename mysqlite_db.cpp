@@ -24,12 +24,16 @@ MySqlite_db::~MySqlite_db(){
 
 
 }
+
 MySqlite_db::MySqlite_db(){
     this->db_connection = QSqlDatabase::addDatabase("QSQLITE" );
     this->db_connection.setDatabaseName("C:/Users/sandr/Desktop/database/gpa_calculator.db"); // Path to the database
+    bool ok = this->db_connection.open();
 
-    if(this->db_connection.open()){
+    if(ok){
         qDebug()<< "Connection was successefull...";
+        query q;
+
     }else{
         qDebug() << "Connection was not successfull...failed to open the database...";
     }

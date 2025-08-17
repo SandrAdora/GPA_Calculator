@@ -4,7 +4,10 @@
 
 /************************************************************************* Administration ***************************************************************************/
 
-Administration::Administration() {}
+Administration::Administration() {
+    ptr = nullptr;
+
+}
 
 
 unique_ptr<Person> Administration::FactoryMethod()
