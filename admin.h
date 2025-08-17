@@ -12,9 +12,6 @@ class Admin : public Person
 {
 public:
     Admin();
-
-
-
     // methods from super class
     // Redefination of methods from the super class
     void set_fullname(QString name) override { fullname = name;}
@@ -32,14 +29,8 @@ public:
     // Getter methods
     str get_it_admin_password() const;
     int get_admin_id() const;
-
-
-
-
-
-
-
     bool admin_(str); // checks if password correspond with the IT password
+
 protected:
     int admin_id;
     str admin_password; // IT password which is already fix

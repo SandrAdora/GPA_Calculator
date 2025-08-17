@@ -7,6 +7,7 @@
 #include <QToolBar>
 #include "registration_dialog.h"
 #include "signin_dialog.h"
+#include "admin_dialog.h"
 #include <QtSql>
 
 QT_BEGIN_NAMESPACE
@@ -41,6 +42,8 @@ private:
     Ui::MainWindow *ui;
     signIn_Dialog *signIn;
     registration_Dialog *reg;
+    Admin_Dialog* admin;
+
 
 
 
