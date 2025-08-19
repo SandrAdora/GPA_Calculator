@@ -48,9 +48,9 @@ public:
     bool instert_new_admin(str&); // full name of a new admin
 
     query get_students() const;
-    query get_student_info(int&);
+    query get_student_info(int&, str&); // ID and what info should be retrieved
     query get_subjects() const;
-    query get_student_subjects(int&) const;
+    query get_student_subjects(int&, str&) const; // id and what info should be retrieved
     query get_admins() const;
     
 protected:
