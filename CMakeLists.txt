@@ -49,6 +49,7 @@ add_executable(GPA_Calculator
     Gpa.qrc
     admin_dialog.h admin_dialog.cpp admin_dialog.ui
     admin.h admin.cpp
+    admin_profile_dialog.h admin_profile_dialog.cpp admin_profile_dialog.ui
 
 )
 

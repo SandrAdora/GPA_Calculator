@@ -2,6 +2,7 @@
 #include "ui_registration_dialog.h"
 #include "signin_dialog.h"
 #include "administration.h"
+#include "admin_dialog.h"
 #include <QMessageBox>
 
 registration_Dialog::registration_Dialog(QWidget *parent)
@@ -9,6 +10,10 @@ registration_Dialog::registration_Dialog(QWidget *parent)
     , ui(new Ui::registration_Dialog)
 {
     ui->setupUi(this);
+    ui->widget->setEnabled(true);
+    ui->comboBox_courses->setEditable(true);
+    ui->comboBox_gender->setEditable(true);
+    ui->checkBox_reg_as_admin->setEnabled(true);
     populateComboCourses();
     populateComboGender();
 }
@@ -18,14 +23,10 @@ registration_Dialog::~registration_Dialog()
     delete ui;
 }
 
-
-
-
 // Populating Comboboxes
 void registration_Dialog::getCoursesList()
 {
     coursesList = {
-
         "Mathematics",
         "Informatics",
         "Medical Informatics",
@@ -39,6 +40,7 @@ void registration_Dialog::getCoursesList()
         "Medical Engineering",
         "Electronical Engineering",
         "Architect",
+
     };
 
 }
@@ -53,11 +55,11 @@ void registration_Dialog::getGenders()
 {
     // in this section the list will be populated
     genderList = {
-        " ",
+        "Choose your gender",
         "Male",
         "Female",
         "Dont want to Disclose",
-        "nothing"
+
     };
 
 }
@@ -75,17 +77,35 @@ void registration_Dialog::on_pushButton_signUp_clicked()
 
     QString major = ui->comboBox_courses->currentText();
     QString fullname = ui->lineEdit_fullname->text();
+    QDate  birthdate = ui->dateEdit_birthdate->date();
     QString gender = ui->comboBox_gender->currentText();
     QString email = ui->lineEdit_email->text();
     QString password = ui->lineEdit_password->text();
 
+    // pass the inputs to database
+    Courses cours = this->admnistration->get_course_cour(major);
+    bool was_created = admnistration->add_student(cours, fullname,birthdate, gender, email, password);
 
+    if (was_created)
+    {
+        hide();
+        if(major == "Administrator")
+        {
+            Admin_Dialog* adminSignIn = new Admin_Dialog(this);
+            adminSignIn->show();
 
+        }else
+        {
 
+            signIn = new signIn_Dialog(this);
+            signIn->show();
 
-    signIn = new signIn_Dialog(this);
-    signIn->show();
+        }
 
+    }else
+    {
+        QMessageBox::warning(this, "Add Student Failure", "Student could not be created");
+    }
 
 
 }
@@ -94,5 +114,25 @@ void registration_Dialog::on_pushButton_signUp_clicked()
 void registration_Dialog::on_pushButton_cancel_clicked()
 {
 
+    ui->checkBox_reg_as_admin->setChecked(false);
+    ui->dateEdit_birthdate->setDate(QDate::currentDate());
+    ui->lineEdit_email->setText("");
+    ui->lineEdit_fullname->setText("");
+    ui->lineEdit_password->setText("");
+    ui->comboBox_courses->setEditText("");
+    ui->comboBox_gender->setEditText("");
+}
+
+
+void registration_Dialog::on_checkBox_reg_as_admin_clicked()
+{
+
+
+    // check for response when checkbox is clicked
+    connect(ui->checkBox_reg_as_admin, &QCheckBox::clicked, this, []() {
+        qDebug() << "Registration as Admin clicked!";
+    });
+
+    ui->comboBox_courses->setEditText("Administrator");
 }
 

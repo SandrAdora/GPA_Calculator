@@ -36,7 +36,7 @@ private slots:
 
     void on_actionregistration_triggered();
 
-    void on_action_password_triggered();
+    void on_actionpassword_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -73,13 +73,11 @@ void MainWindow::on_pushButton_calculate_gpa_clicked()
 }
 
 
-
 void MainWindow::on_actiondelete_triggered()
 {
     QString empty_str = "";
     ui->lineEdit_input_grades->setText(empty_str);
 }
-
 
 void MainWindow::on_actionsignIn_triggered()
 {
@@ -97,7 +95,7 @@ void MainWindow::on_actionregistration_triggered()
     reg->show();
 }
 
-void MainWindow::on_action_password_triggered(){
+void MainWindow::on_actionpassword_triggered(){
     hide();
     admin = new Admin_Dialog(this);
     admin->show();

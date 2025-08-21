@@ -27,7 +27,7 @@ unique_ptr<Person> Administration::create_object(MethodType& t){
 }
 
 
-void Administration::add_student(Courses& course, QString &name, QDate &geb, QString&gen, QString& em, QString& ps){
+bool Administration::add_student(Courses& course, QString &name, QDate &geb, QString&gen, QString& em, QString& ps){
 
     if(ptr == nullptr){
         this->type = MethodType::student;     
@@ -41,17 +41,31 @@ void Administration::add_student(Courses& course, QString &name, QDate &geb, QSt
 
     unique_ptr<Student> sptr(dynamic_cast<Student*>(ptr.release())); //Safe downcast: because student inheritsfrom person, using dynamic cast on the pointer and wrapp it aoround an new unique pointer
     sptr->set_course(course);
+    str student_course = sptr->get_course_str();
+    int gender = -1;
+    if (gen == "male" || "Male" )
+        gender = (int)Gender::MALE;
+    else if(gen == "female" || "Female")
+        gender = (int)Gender::FEAMALE;
+    else if(gen == "dont_disclose")
+        gender  = (int)Gender::DONT_DISCLOSE;
+    else
+        gender = (int)Gender::NOTHING;
 
     // adding new student into the database
     const str table_name = "student";
     bool table_exists = false;
     MySqlite_db* db;
 
+
     if(db->get_instance())
     {
-        qDebug() << "Do something";
+        bool student_inserted = db->insert_student(student_course, name, geb, gender, em, ps);
+
+
     }else {
         qDebug() << "Do somethin else";
+        return false;
     }
 
 
@@ -59,6 +73,7 @@ void Administration::add_student(Courses& course, QString &name, QDate &geb, QSt
     students.push_back(move(sptr)); // adds a new student to the vector using the same singleton pointer
     // since downcast ptr now belongst to sptr must be reseted in order to be used again
     ptr.reset();
+    return true;
 
 }
 void Administration::add_new_subjects(QString& name, int& e, double& w){

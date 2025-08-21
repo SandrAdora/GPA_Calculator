@@ -24,23 +24,37 @@ MySqlite_db::~MySqlite_db(){
 
 // Dynamically creating sql statements for creating tables
 std::string MySqlite_db::build_create_table_sql(const std::vector<std::string>& schema) {
-    if (schema.empty()) return "";
+    if (schema.size() < 3 || schema.size() % 2 == 1) return "";
 
     std::string table_name = schema[0];
     std::string sql = "CREATE TABLE " + table_name + " (\n";
+    std::vector<std::string> foreign_keys;
 
     for (size_t i = 1; i < schema.size(); i += 2) {
         std::string col_name = schema[i];
-        std::string col_type = (i + 1 < schema.size()) ? schema[i + 1] : "TEXT";
+        std::string col_type = schema[i + 1];
+
         std::string col_def = "    " + col_name + " " + col_type;
 
-        if (i + 2 < schema.size() &&
-            (schema[i + 2] == "primary key" || schema[i + 2] == "foreign key")) {
-            col_def += " " + schema[i + 2];
-            i++; // Skip key entry
+        // Check for optional key specifier
+        if (i + 2 < schema.size()) {
+            std::string key_spec = schema[i + 2];
+            if (key_spec == "primary key") {
+                col_def += " PRIMARY KEY AUTOINCREMENT";
+                i++; // Skip key spec
+            } else if (key_spec == "foreign key") {
+                // Collect foreign key separately
+                foreign_keys.push_back("    FOREIGN KEY (" + col_name + ") REFERENCES other_table(other_column)");
+                i++; // Skip key spec
+            }
         }
 
         sql += col_def + ",\n";
+    }
+
+    // Append foreign keys
+    for (const auto& fk : foreign_keys) {
+        sql += fk + ",\n";
     }
 
     // Remove trailing comma and newline
@@ -63,8 +77,9 @@ string MySqlite_db::create_tables(int rows)
 
     //Keywords
 
-    string primary_key = "primary key";
+    string primary_key = "primary key AUTOINCREMENT";
     string foreign_key = "foreign key";
+
 
     // Beginn of user Input
     cout << "Enter table name: ";
@@ -108,6 +123,7 @@ string MySqlite_db::create_tables(int rows)
     return build_create_table_sql(table_schema_parts);
 }
 
+
 MySqlite_db::MySqlite_db(){
     this->db_connection = QSqlDatabase::addDatabase("QSQLITE" );
     this->db_connection.setDatabaseName("C:/Users/sandr/Desktop/database/gpa_calculator.db"); // Path to the database
@@ -115,13 +131,6 @@ MySqlite_db::MySqlite_db(){
 
     if(ok){
         qDebug()<< "Connection was successefull...";
-        cout << "A list of all the available tables will be displayed";
-        query q("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name");
-        while(q.next())
-        {
-            str tableName = q.value(0).toString();
-            qDebug() << "Table: " << tableName;
-        }
 
 
     }else{
@@ -136,4 +145,99 @@ bool MySqlite_db::check_status()
         return 0;
     }
     return 1;
+}
+
+/*Help Funtion
+ * Checks if a specific table exists in the database, returns true if found and flase if not*/
+
+bool check_if_table_exist(str table_name)
+{
+    query q("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name");
+    while(q.next())
+    {
+        str table_name_from_database = q.value(0).toString();
+        if(table_name == table_name_from_database)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Student
+bool MySqlite_db::insert_student(str& course, str& fullname, QDate& birthdate, int& gender, str& email, str& password)
+{
+
+    str new_table  = "student";
+    bool creation_completed = false; // check if table should be created
+    query createQuery; // query --> QSqlQuery
+    if (!check_status()) // database should be open
+    {
+
+        return false;
+
+    }else {
+        // Create database if table_name not existant
+        bool table_exists = check_if_table_exist(new_table);
+        if(!table_exists)
+        {
+
+            // creating database
+            // str --> QString
+
+
+            str query_str = str::fromStdString( this->create_tables(6)); // create_tables create a table consisting of 6 columns
+            createQuery.exec(query_str);
+            table_exists = check_if_table_exist(new_table);
+        }
+
+        if(table_exists)
+        {
+            // Insert elements to the database
+            str inserQuery = "INSERT INTO "+ new_table +
+                             "(course, fullname, birthdate, gender, email, password) "
+                                                          "VALUES("
+                                                          ":cors, :fulln, :geb, :gen, :em, :pw"
+                                                          ")";
+
+            createQuery.prepare(inserQuery);
+            createQuery.bindValue(":cors", course);
+            createQuery.bindValue(":fulln", fullname);
+            createQuery.bindValue(":geb", birthdate);
+            createQuery.bindValue(":gen", gender);
+            createQuery.bindValue(":em", email);
+            createQuery.bindValue(":pw", password);
+            return createQuery.exec();
+
+        }else{
+            QMessageBox::warning(nullptr, "Database Error", "Database table could not be created"); //nullptr since MySqlite_db isnt inheriting from QWidget
+            return false;
+
+        }
+    }
+}
+// subject
+bool MySqlite_db::insert_subject(int& student_id, QString& subject_name, int& weights, float& ects )
+{
+    if(!this->check_status())
+    {
+        QMessageBox::warning(nullptr, "Database Error", "Database could not open");
+        return false;
+    }
+    str table_name = "subject";
+    bool table_exist = check_if_table_exist(table_name);
+    if(!table_exist)
+    {
+        // get student Id
+
+        // Create new table with name subject if table cant be found in database
+        // str == QStrin
+        str query_str = str::fromStdString(this->create_tables(4));
+
+
+
+    }
+    // str == QString
+    str qr_str = "INSERT INTO "+ table_name + "(sudent_id, subject_name, weights, ects)"
+                                               "VALUES (:stud_id, :sub_n, :wei, :ect)";
 }

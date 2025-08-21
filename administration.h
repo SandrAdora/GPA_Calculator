@@ -54,7 +54,7 @@ public:
 
     unique_ptr<Person> create_object(MethodType& ); // call factory method and returns requested obj
 
-    void add_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email and password
+    bool add_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email and password
     void add_new_subjects(QString&, int&, double&); // name of subject, ects and weights of each subjects
     bool delete_subject(int); // id of subject to be deleted
     void view_all_subjects() const;

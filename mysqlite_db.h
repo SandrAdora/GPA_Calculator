@@ -36,15 +36,16 @@ public:
 
     // Build Connection to existing database 
     void build_connection_database();
-    bool check_status(); 
+    bool check_status();
 
-    // Operations 
-    bool insert_student(QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
+    // Operations
+    bool insert_student( QString& ,QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
+    bool insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects.
 
     Student* get_student(int&); // return the infos of a specific student
     bool delete_student(int&); // id
     void update_student(int&, QString&); // 2nd var. should be what chould be updated
-    bool insert_subject(str&, int&, float&); // name of the subject, weights of each subject and ects.
+
     bool instert_new_admin(str&); // full name of a new admin
 
     query get_students() const;

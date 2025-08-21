@@ -2,6 +2,8 @@
 #define REGISTRATION_DIALOG_H
 #include "ui_registration_dialog.h"
 #include "signin_dialog.h"
+#include "administration.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -21,12 +23,19 @@ private slots:
 
     void on_pushButton_signUp_clicked();
 
+    void on_checkBox_reg_as_admin_clicked();
+
 private:
     Ui::registration_Dialog *ui;
     signIn_Dialog *signIn;
 
+    Administration* admnistration;
+
+
+
     // Filling out the Combolist
     void getCoursesList();
+
     void populateComboCourses();
     QStringList coursesList;
     QStringList genderList;

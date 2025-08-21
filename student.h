@@ -24,6 +24,7 @@ enum Courses{
     , Medical_Engineering
     , Electronical_Engineering
     , Architect
+    , Administrator
 
 
 };
@@ -38,7 +39,8 @@ public:
 
 
     void set_course(Courses);
-    Courses get_course(QString);
+    QString get_course_str() const;
+    Courses get_course_cour(QString& major) ;
     int get_id()const;
 
 
