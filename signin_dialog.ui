@@ -81,7 +81,7 @@
      <string>OK</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="pushButton_signIn_canceled">
     <property name="geometry">
      <rect>
       <x>240</x>

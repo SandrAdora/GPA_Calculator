@@ -27,6 +27,7 @@ registration_Dialog::~registration_Dialog()
 void registration_Dialog::getCoursesList()
 {
     coursesList = {
+        "As",
         "Mathematics",
         "Informatics",
         "Medical Informatics",
@@ -84,29 +85,22 @@ void registration_Dialog::on_pushButton_signUp_clicked()
 
     // pass the inputs to database
     Courses cours = this->admnistration->get_course_cour(major);
-    bool was_created = admnistration->add_student(cours, fullname,birthdate, gender, email, password);
+    //admnistration->add_student(cours, fullname,birthdate, gender, email, password);
 
-    if (was_created)
+
+    hide();
+    if(major == "Administrator")
     {
-        hide();
-        if(major == "Administrator")
-        {
-            Admin_Dialog* adminSignIn = new Admin_Dialog(this);
-            adminSignIn->show();
+        Admin_Dialog* adminSignIn = new Admin_Dialog(this);
+        adminSignIn->show();
 
-        }else
-        {
-
-            signIn = new signIn_Dialog(this);
-            signIn->show();
-
-        }
-
-    }else
-    {
-        QMessageBox::warning(this, "Add Student Failure", "Student could not be created");
     }
+    else
+    {
+        signIn = new signIn_Dialog(this);
+        signIn->show();
 
+    }
 
 }
 

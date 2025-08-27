@@ -7,5 +7,6 @@
         <file>documentation/logos/signIn.jpg</file>
         <file>documentation/logos/GPA-Calculator-2.png</file>
         <file>documentation/logos/password.png</file>
+        <file>documentation/logos/back.png</file>
     </qresource>
 </RCC>

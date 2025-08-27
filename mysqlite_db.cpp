@@ -124,17 +124,19 @@ string MySqlite_db::create_tables(int rows)
 }
 
 
-MySqlite_db::MySqlite_db(){
-    this->db_connection = QSqlDatabase::addDatabase("QSQLITE" );
+MySqlite_db::MySqlite_db(QString& db_name){
+    this->db_connection = QSqlDatabase::addDatabase(db_name );
     this->db_connection.setDatabaseName("C:/Users/sandr/Desktop/database/gpa_calculator.db"); // Path to the database
     bool ok = this->db_connection.open();
 
     if(ok){
-        qDebug()<< "Connection was successefull...";
+        QMessageBox::information(nullptr, "Database Connection Status", "Connection was successfull....");
+
 
 
     }else{
-        qDebug() << "Connection was not successfull...failed to open the database...";
+        QMessageBox::warning(nullptr, "Database Connection Status", "Connection was not successfull...failed to open the database...");
+        // create database if not created
     }
 }
 bool MySqlite_db::check_status()

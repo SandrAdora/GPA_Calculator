@@ -19,6 +19,8 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pushButton_signIn_canceled_clicked();
+
 private:
     Ui::signIn_Dialog *ui;
     student_profile_Dialog *pro;

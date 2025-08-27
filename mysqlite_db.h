@@ -54,8 +54,8 @@ public:
     query get_student_subjects(int&, str&) const; // id and what info should be retrieved
     query get_admins() const;
     
-protected:
-    MySqlite_db();
+
+    MySqlite_db(QString&);
 private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection

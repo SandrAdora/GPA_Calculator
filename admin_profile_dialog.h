@@ -15,6 +15,11 @@ public:
     explicit Admin_Profile_Dialog(QWidget *parent = nullptr);
     ~Admin_Profile_Dialog();
 
+private slots:
+    void on_pushButton_create_table_clicked();
+
+    void on_commandLinkButton_create_database_clicked();
+
 private:
     Ui::Admin_Profile_Dialog *ui;
 

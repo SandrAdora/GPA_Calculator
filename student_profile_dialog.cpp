@@ -27,10 +27,16 @@ void student_profile_Dialog::studentMenuBar()
 {
     menubar = new QMenuBar(this);
     // create menus
-    QMenu *fileMenus = new QMenu("more options...", this);
+    QMenu *fileMenus = new QMenu("...", this);
     signOut = new QAction(QIcon(":/icons/documentation/logos/signout.png"), "signOut", this);
     saveChanges = new QAction(QIcon(":/icons/documentation/logos/save_changes.jpg"), "saveChanges", this);
     discardChanges = new QAction(QIcon(":/icons/documentation/logos/Delete-Icon-Transparent-PNG.png"), "discardChanges", this);
+    // Connect actions to respective methods
+    connect(signOut, &QAction::triggered, this, &student_profile_Dialog::on_actionsignout_triggered);
+    connect(saveChanges, &QAction::triggered, this, &student_profile_Dialog::on_actionsaveChanges_triggered);
+    connect(discardChanges, &QAction::triggered, this, &student_profile_Dialog::on_actiondiscardChanges_triggered);
+
+    // Add actions to menuebar
     fileMenus->addAction(saveChanges);
     fileMenus->addAction(discardChanges);
     fileMenus->addAction(signOut);
