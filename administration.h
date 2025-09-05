@@ -10,6 +10,7 @@
 #include "student.h"
 #include "subject.h"
 #include "admin.h"
+#include "mysqlite_db.h"
 
 
 
@@ -28,6 +29,7 @@ enum MethodType {
 
 
 // responsible for creating and returning the type of person on demand
+// new features can be added if neccessary
 class Factory
 {
     Person* create(MethodType t)
@@ -44,7 +46,7 @@ class Factory
 };
 
 // factory method class
-class Administration : public Student
+class Administration : public Student , Admin
 {
 public:
     static Administration* Instance(); // Instance
@@ -54,6 +56,8 @@ public:
 
     unique_ptr<Person> create_object(MethodType& ); // call factory method and returns requested obj
 
+
+    bool add_neww_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
     bool add_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email and password
     void add_new_subjects(QString&, int&, double&); // name of subject, ects and weights of each subjects
     bool delete_subject(int); // id of subject to be deleted
@@ -64,8 +68,20 @@ public:
     bool update_subject_ect(int&, int); // id and ect
     bool update_subject_name(int&, QString&); // id and name of the object
     bool update_subject_weights(int& ,double); // id and new weights for subject
+    bool add_new_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
+    bool update_admin_name(int&, QString); // id of an admin and new name
+    bool update_admin_birthdate(int& Qdate);
+    bool update_admin_email(int, QString); // id and new email
+
+    std::vector<Student> view_all_student() const; // returns a list of all students
+    std::vector<Admin> view_all_admin() const; // resturns a list of all admins
+    std::vector<Subject> view_all_subject() const; //returns a ist of all subjects
+
+    bool delete_admin(int&);
+
 
     // unequal operator
+
 
 
 
@@ -77,8 +93,10 @@ private:
     std::vector<std::unique_ptr<Student>>students;
     MethodType type;
     std::vector<Subject*> subjects;
+    std::vector<std::unique_ptr<Admin>> admins;
     unique_ptr<Person> ptr;
     static Administration* _instance;
+    MySqlite_db* db;
 
 };
 

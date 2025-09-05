@@ -97,6 +97,6 @@ void MainWindow::on_actionregistration_triggered()
 
 void MainWindow::on_actionpassword_triggered(){
     hide();
-    admin = new Admin_Dialog(this);
+    admin = new Admin_Dialog();
     admin->show();
 }

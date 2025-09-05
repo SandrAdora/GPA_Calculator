@@ -1,4 +1,5 @@
 #include "mysqlite_db.h"
+#include <QFile>
 #include <QMessageBox>
 
 MySqlite_db* MySqlite_db::instance = nullptr;
@@ -6,7 +7,7 @@ MySqlite_db* MySqlite_db::instance = nullptr;
 MySqlite_db* MySqlite_db::get_instance() {
     if(this->instance == nullptr){
         try {
-            this->instance = new MySqlite_db();
+            instance = new MySqlite_db();
 
         }catch(std::bad_alloc& exception){
             std::cerr << "Bad Alloc detected: " << exception.what();
@@ -123,32 +124,79 @@ string MySqlite_db::create_tables(int rows)
     return build_create_table_sql(table_schema_parts);
 }
 
+bool MySqlite_db::build_table(QStringList & sql_str, str& name_of_table, str reference)
+{
+    this->default_db_name = name_of_table;
+    str sql = "CREATE TABLE " + this->default_db_name + " (\n";
+    for (const str& line : sql_str)
+        sql += " " + line + ",\n";
 
-MySqlite_db::MySqlite_db(QString& db_name){
-    this->db_connection = QSqlDatabase::addDatabase(db_name );
-    this->db_connection.setDatabaseName("C:/Users/sandr/Desktop/database/gpa_calculator.db"); // Path to the database
+    sql.chop(2); // removing last comma and newline
+    sql += "\n)";
+
+    QSqlQuery q;
+    q.prepare(sql);
+    if(!q.exec())
+    {
+        qDebug() << "SQL Error:" << q.lastError().text();
+        return false;
+    }
+
+
+    return true;
+}
+
+MySqlite_db::MySqlite_db()
+
+{
+
+    this->default_db = "QSQLITE";
+    this->default_db_name = "gpa_calculator.db";
+    if (QSqlDatabase::contains("qt_sql_default_connection")) {
+        QSqlDatabase::removeDatabase("qt_sql_default_connection");
+    }
+    this->db_connection = QSqlDatabase::addDatabase(this->default_db);
+    this->db_connection.setDatabaseName(this->default_db_name);
+    this->db_connection.open();
+
+}
+
+MySqlite_db::MySqlite_db(QString& db_, QString db_name)
+{
+    if (QSqlDatabase::contains("qt_sql_default_connection")) {
+        QSqlDatabase::removeDatabase("qt_sql_default_connection");
+    }
+    this->default_db = db_;
+    this->db_connection = QSqlDatabase::addDatabase(this->default_db );
+
+    if (db_name != "")
+        this->default_db_name = db_name;
+    QString db_fullpath = "C:/Users/sandr/Desktop/database/"+ this->default_db_name + ".db";
+
+
+
+    this->db_connection.setDatabaseName(db_fullpath); // Path to the database
     bool ok = this->db_connection.open();
 
-    if(ok){
+    if(ok)
         QMessageBox::information(nullptr, "Database Connection Status", "Connection was successfull....");
 
-
-
-    }else{
-        QMessageBox::warning(nullptr, "Database Connection Status", "Connection was not successfull...failed to open the database...");
-        // create database if not created
-    }
 }
 bool MySqlite_db::check_status()
 {
     if(!db_connection.isValid() || !db_connection.isOpen())
     {
         QMessageBox::warning(nullptr, "Database", "No connection to the database");
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
+// When Admin clicks on disconnect, this is the function that will be called
+void MySqlite_db::disconnect_db()
+{
+     this->db_connection.close();
+}
 /*Help Funtion
  * Checks if a specific table exists in the database, returns true if found and flase if not*/
 
@@ -167,56 +215,30 @@ bool check_if_table_exist(str table_name)
 }
 
 // Student
-bool MySqlite_db::insert_student(str& course, str& fullname, QDate& birthdate, int& gender, str& email, str& password)
+bool MySqlite_db::insert_student(str& course,
+                                 str& fullname,
+                                 QDate& birthdate,
+                                 int& gender,
+                                 str& email,
+                                 str& password)
 {
 
-    str new_table  = "student";
-    bool creation_completed = false; // check if table should be created
-    query createQuery; // query --> QSqlQuery
-    if (!check_status()) // database should be open
+    if(!this->check_status())
     {
-
+        QMessageBox::warning(nullptr, "Database Status", "No connection to database...");
         return false;
-
-    }else {
-        // Create database if table_name not existant
-        bool table_exists = check_if_table_exist(new_table);
-        if(!table_exists)
-        {
-
-            // creating database
-            // str --> QString
-
-
-            str query_str = str::fromStdString( this->create_tables(6)); // create_tables create a table consisting of 6 columns
-            createQuery.exec(query_str);
-            table_exists = check_if_table_exist(new_table);
-        }
-
-        if(table_exists)
-        {
-            // Insert elements to the database
-            str inserQuery = "INSERT INTO "+ new_table +
-                             "(course, fullname, birthdate, gender, email, password) "
-                                                          "VALUES("
-                                                          ":cors, :fulln, :geb, :gen, :em, :pw"
-                                                          ")";
-
-            createQuery.prepare(inserQuery);
-            createQuery.bindValue(":cors", course);
-            createQuery.bindValue(":fulln", fullname);
-            createQuery.bindValue(":geb", birthdate);
-            createQuery.bindValue(":gen", gender);
-            createQuery.bindValue(":em", email);
-            createQuery.bindValue(":pw", password);
-            return createQuery.exec();
-
-        }else{
-            QMessageBox::warning(nullptr, "Database Error", "Database table could not be created"); //nullptr since MySqlite_db isnt inheriting from QWidget
-            return false;
-
-        }
     }
+    QSqlQuery qur;
+    qur.prepare("INSERT INTO student (course, fullname, birthdate, gender, email, password)"
+                "VALUES(:kurs, :name, :geburtstag, :email, :passwort )");
+    qur.bindValue(":kurs", course);
+    qur.bindValue(":name", fullname);
+    qur.bindValue(":geburtstag", birthdate);
+    qur.bindValue(":email", email);
+    qur.bindValue(":passwort", password);
+
+        return qur.exec();
+
 }
 // subject
 bool MySqlite_db::insert_subject(int& student_id, QString& subject_name, int& weights, float& ects )
@@ -226,20 +248,46 @@ bool MySqlite_db::insert_subject(int& student_id, QString& subject_name, int& we
         QMessageBox::warning(nullptr, "Database Error", "Database could not open");
         return false;
     }
-    str table_name = "subject";
-    bool table_exist = check_if_table_exist(table_name);
-    if(!table_exist)
-    {
-        // get student Id
-
-        // Create new table with name subject if table cant be found in database
-        // str == QStrin
-        str query_str = str::fromStdString(this->create_tables(4));
 
 
 
-    }
     // str == QString
-    str qr_str = "INSERT INTO "+ table_name + "(sudent_id, subject_name, weights, ects)"
+    QSqlQuery q;
+    str qr_str = "INSERT INTO  subject (sudent_id, subject_name, weights, ects)"
                                                "VALUES (:stud_id, :sub_n, :wei, :ect)";
+
+    q.prepare(qr_str);
+    q.bindValue(":stud_id", student_id);
+    q.bindValue(":sub_n", subject_name);
+    q.bindValue(":wei", weights);
+    q.bindValue(":ects", ects);
+
+    return q.exec();
+}
+
+bool MySqlite_db::instert_new_admin(str &f, QDate &d, str &g, str &e, str &p)
+{
+    if(!this->check_status())
+    {
+        QMessageBox::warning(nullptr, "Database", "Database open failure");
+        return false;
+    }
+    QSqlQuery q;
+    str q_str =
+        "INSERT INTO admin (fullname, birhdate, gender, email, password)"
+        "VALUES (:f, :d, :g, :e, :p)";
+    q.prepare(q_str);
+    q.bindValue(":f", f);
+    q.bindValue(":e", e);
+    q.bindValue(":p", p);
+    q.bindValue(":g", g);
+    q.bindValue(":d", d);
+    bool success = q.exec();
+    if(success)
+        return success;
+    else {
+        QMessageBox::warning(nullptr, "Database table", "failure");
+    }
+    return false;
+
 }

@@ -16,18 +16,21 @@ class Create_new_Database_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Create_new_Database_Dialog( MySqlite_db* db, QWidget *parent = nullptr);
+    explicit Create_new_Database_Dialog( QWidget *parent = nullptr);
     ~Create_new_Database_Dialog();
 
 private slots:
     void on_pushButton_connect_db_clicked();
+
+    void on_pushButton_disconnect_db_clicked();
 
 private:
     Ui::Create_new_Database_Dialog *ui;
     void populateDBCombo();
     void get_dbs();
     QStringList db_list;
-    MySqlite_db* db;
+    MySqlite_db* createDB = new MySqlite_db();
+    MySqlite_db* connection_db;
 };
 
 #endif // CREATE_NEW_DATABASE_DIALOG_H

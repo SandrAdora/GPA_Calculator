@@ -3,8 +3,13 @@
 
 #include <QDialog>
 #include "create_table_dialog.h"
+#include "mysqlite_db.h"
 #include <QCheckBox>
 #include <QMenu>
+#include <QtCore/qglobal.h> // or include <QCoreApplication> indirectly
+
+
+
 
 namespace Ui {
 class Add_Elem_To_Table_Dialog;
@@ -30,13 +35,16 @@ private slots:
 private:
     Ui::Add_Elem_To_Table_Dialog *ui;
     Create_Table_Dialog* create_table = new Create_Table_Dialog(this);
+    MySqlite_db* db_instance = new MySqlite_db();
     QLineEdit* elem;
+    QLineEdit* reference;
     QComboBox* type ;  QComboBox* role;
-    QCheckBox* autoincrement;
     QList<QLineEdit*> elemFields;
     QList<QComboBox*> typeFields;
     QList<QComboBox*> roleFields;
+    QList<QLineEdit*> referenceFields;
     QList<QCheckBox*> incrementFields;
+    QStringList sql_elems;
 
     void available_elems();
     void go_back_menu();

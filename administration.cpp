@@ -1,5 +1,4 @@
 #include "administration.h"
-#include "mysqlite_db.h"
 
 
 /************************************************************************* Administration ***************************************************************************/
@@ -24,6 +23,49 @@ unique_ptr<Person> Administration::FactoryMethod()
 unique_ptr<Person> Administration::create_object(MethodType& t){
     this->type = t;
     return this->FactoryMethod();
+}
+
+bool Administration::add_neww_admin(QString &fullname, QDate &d, QString &g, QString &e, QString &pw)
+{
+    if(this->ptr == nullptr)
+    {
+        this->type = MethodType::admin;
+        ptr = this->create_object(type);
+    }
+    ptr->set_fullname(fullname);
+    ptr->set_birthdate(d);
+    ptr->set_gender(g);
+    ptr->set_email(e);
+    ptr->set_password(pw);
+    //using unique pointer to handle del allocated obj
+    unique_ptr<Admin> aptr(dynamic_cast<Admin*>(ptr.release()));
+
+    // allcate the correct gender type
+    int gender = -1;
+    if ( g == "male" || g == "Male")
+        gender = (int)Gender::MALE;
+    else if ( g == "female" || g == "Feamale")
+        gender = (int)Gender::FEAMALE;
+    else if(g =="Dont disclose" || g == "Dont Disclos" || g == "dont disclos")
+        gender = (int)Gender::DONT_DISCLOSE;
+    else {
+        gender = (int)Gender::NOTHING;
+    }
+    const QString ta_na = "admin";
+    bool table_name_exits = false;
+
+
+    ///check for exstance
+    if(!db->check_status())
+    {
+        QMessageBox::warning(nullptr, "Database", "Database is not open");
+        return false;
+    }
+    admins.push_back(move(aptr)); // pushing student into the list
+    ptr.reset();
+
+    // add admin to the database
+
 }
 
 
@@ -55,25 +97,16 @@ bool Administration::add_student(Courses& course, QString &name, QDate &geb, QSt
     // adding new student into the database
     const str table_name = "student";
     bool table_exists = false;
-    MySqlite_db* db;
 
 
-    if(db->get_instance())
+    if(!db->get_instance())
     {
-        bool student_inserted = db->insert_student(student_course, name, geb, gender, em, ps);
-
-
-    }else {
-        qDebug() << "Do somethin else";
         return false;
     }
-
-
-
     students.push_back(move(sptr)); // adds a new student to the vector using the same singleton pointer
     // since downcast ptr now belongst to sptr must be reseted in order to be used again
     ptr.reset();
-    return true;
+    return db->insert_student(student_course, name, geb, gender, em, ps);
 
 }
 void Administration::add_new_subjects(QString& name, int& e, double& w){

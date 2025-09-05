@@ -3,6 +3,7 @@
 #include "ui_registration_dialog.h"
 #include "signin_dialog.h"
 #include "administration.h"
+#include "mysqlite_db.h"
 
 #include <QDialog>
 
@@ -28,6 +29,7 @@ private slots:
 private:
     Ui::registration_Dialog *ui;
     signIn_Dialog *signIn;
+    MySqlite_db* db_in;
 
     Administration* admnistration;
 

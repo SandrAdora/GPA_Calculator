@@ -32,11 +32,13 @@ public:
      // dynamic Method to create the database table
     string build_create_table_sql(const vector<string>&);
     string create_tables(int ); // amount or rows the database table should have
+    bool build_table(QStringList&, str&, str = ""); // list of sql statements & name of the table and references if available
 
 
     // Build Connection to existing database 
     void build_connection_database();
     bool check_status();
+    void disconnect_db();
 
     // Operations
     bool insert_student( QString& ,QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
@@ -46,7 +48,11 @@ public:
     bool delete_student(int&); // id
     void update_student(int&, QString&); // 2nd var. should be what chould be updated
 
-    bool instert_new_admin(str&); // full name of a new admin
+    bool instert_new_admin(str&, QDate&, str&, str&, str&); // full name of a new admin, date , gender, email and password
+
+    int& get_sudent_id() const;
+    int& get_subject_id() const;
+    int& get_admin_id() const;
 
     query get_students() const;
     query get_student_info(int&, str&); // ID and what info should be retrieved
@@ -55,10 +61,13 @@ public:
     query get_admins() const;
     
 
-    MySqlite_db(QString&);
+    MySqlite_db(QString&, QString = "");
+    MySqlite_db();
 private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection
+    QString default_db;
+    QString default_db_name;
 };
 
 #endif // MYSQLITE_DB_H

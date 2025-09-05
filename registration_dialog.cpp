@@ -74,7 +74,6 @@ void registration_Dialog::populateComboGender()
 
 void registration_Dialog::on_pushButton_signUp_clicked()
 {
-    QMessageBox::information(this, "Registration", "was successfull");
 
     QString major = ui->comboBox_courses->currentText();
     QString fullname = ui->lineEdit_fullname->text();
@@ -85,22 +84,44 @@ void registration_Dialog::on_pushButton_signUp_clicked()
 
     // pass the inputs to database
     Courses cours = this->admnistration->get_course_cour(major);
+    //Gender gen = this->admnistration->get_gender();
     //admnistration->add_student(cours, fullname,birthdate, gender, email, password);
 
 
-    hide();
-    if(major == "Administrator")
+    // add input to database
+
+    bool ok = false;
+    ok  = this->db_in->get_instance()->check_status();
+    if(!ok)
+        QMessageBox::warning(this, "Database Connection", "No Connection possible");
+
+    ok = this->admnistration->add_student(cours, fullname, birthdate, gender, email, password);
+    if(ok)
     {
-        Admin_Dialog* adminSignIn = new Admin_Dialog(this);
-        adminSignIn->show();
+          QMessageBox::information(this, " Add new Admin ", "success...");
+        if(major == "Administrator")
+        {
+            Admin_Dialog* adminSignIn = new Admin_Dialog();
+            adminSignIn->show();
+
+        }
+        QMessageBox::information(this, " Add new Student ", "success...");
+        this->hide();
+        signIn = new signIn_Dialog(this);
+        signIn->show();
+
 
     }
     else
     {
-        signIn = new signIn_Dialog(this);
-        signIn->show();
-
+        QMessageBox::warning(this, "Add new User", " failed...");
     }
+
+
+
+
+
+
 
 }
 

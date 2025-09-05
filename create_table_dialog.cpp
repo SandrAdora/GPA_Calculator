@@ -48,17 +48,32 @@ void Create_Table_Dialog::add_widgets_to_VBox_Layout()
     int columns = get_column().toInt(&ok);
     if(ok)
     {
+
+
         for(int i = 0; i < columns; ++i)
         {
             QLineEdit* columnNameEdit = new QLineEdit(this);
             QComboBox* typeSelector = new QComboBox(this);
             QComboBox* columnRole = new QComboBox(this);
+
             typeSelector->addItems({"INTEGER", "TEXT", "REAL", "BLOB"});
             columnRole->addItems({"PRIMARY KEY AUTOINCREMENT", "FOREIGN KEY"});
             layout->addRow("Column" + QString::number(i+1), columnNameEdit);
             layout->addRow("Type", typeSelector);
             layout->addRow("Role", columnRole);
-            column_inputs.append({columnNameEdit, typeSelector, columnRole});
+
+
+            QWidget* referenceContainer = new QWidget(this);
+            QFormLayout* referenceLayout = new QFormLayout(referenceContainer);
+            QLineEdit* refenceEdit = new QLineEdit(this);
+            referenceLayout->addRow("Reference", refenceEdit);
+            referenceContainer->setVisible(false); // hide initially
+            connect(columnRole, &QComboBox::currentTextChanged, this, [referenceContainer](const QString& text){
+                referenceContainer->setVisible(text == "FOREIGN KEY");
+            });
+
+            layout->addRow(referenceContainer );
+            column_inputs.append({columnNameEdit, typeSelector, columnRole , refenceEdit});
 
 
         }
@@ -108,6 +123,11 @@ void Create_Table_Dialog::populate_colum_comboBox()
 
     this->how_many_columns_available();
     ui->comboBox_create_table_dia_columns->addItems(columns);
+
+}
+
+void Create_Table_Dialog::add_reference()
+{
 
 }
 

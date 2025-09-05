@@ -11,6 +11,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QTimeEdit>
+#include <QWidget>
 
 
 struct ColumnInputs
@@ -18,6 +19,7 @@ struct ColumnInputs
     QLineEdit* nameEdit;
     QComboBox* typeSelector;
     QComboBox* role;
+    QLineEdit* references;
 };
 
 
@@ -53,6 +55,7 @@ private:
     void create_menue_bar();
     void how_many_columns_available();
     void populate_colum_comboBox();
+    void add_reference();
 
 
 

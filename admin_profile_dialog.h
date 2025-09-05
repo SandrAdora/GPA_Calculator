@@ -2,6 +2,8 @@
 #define ADMIN_PROFILE_DIALOG_H
 
 #include <QDialog>
+#include <QDate>
+#include <QVBoxLayout>
 
 namespace Ui {
 class Admin_Profile_Dialog;
@@ -20,8 +22,15 @@ private slots:
 
     void on_commandLinkButton_create_database_clicked();
 
+
+    void on_pushButton_view_table_clicked();
+
 private:
     Ui::Admin_Profile_Dialog *ui;
+    QDate _date;
+    QVBoxLayout* vlayout;
+
+    void current_date();
 
 };
 

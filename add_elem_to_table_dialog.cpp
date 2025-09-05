@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 
+
 Add_Elem_To_Table_Dialog::Add_Elem_To_Table_Dialog(Create_Table_Dialog* sourceDialog, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Add_Elem_To_Table_Dialog)
@@ -37,9 +38,13 @@ void Add_Elem_To_Table_Dialog::available_elems()
 
     for (int i = 0; i < cols; ++i)
     {
+        QHBoxLayout* rowLayout = new QHBoxLayout;
+
+
         elem = new QLineEdit;
-        elem->setPlaceholderText("Name of Element " + QString::number(i + 1));
+        elem->setPlaceholderText( QString::number(i + 1) + " Element");
         this->elemFields.append(this->elem);
+
 
         this->type = new QComboBox;
         type->addItems(typesList);
@@ -48,15 +53,27 @@ void Add_Elem_To_Table_Dialog::available_elems()
         this->role = new QComboBox;
         role->addItems(rolesList);
         this->roleFields.append(this->role);
-        this->autoincrement = new QCheckBox("Auto Increment");
-        this->incrementFields.append(this->autoincrement);
-        QHBoxLayout* rowLayout = new QHBoxLayout;
+        if(i == 0)
+            role->setCurrentText("PRIMARY KEY");
+        if(i == 1)
+            role->setCurrentText("FOREIGN KEY");
+
+
         rowLayout->addWidget(elem);
         rowLayout->addWidget(type);
         rowLayout->addWidget(role);
-        rowLayout->addWidget(autoincrement);
 
-        ui->verticalLayout_display_items->addLayout(rowLayout);
+        if(i ==  1)
+        {
+
+            reference = new QLineEdit;
+            reference->setPlaceholderText("reference");
+            this->referenceFields.append(reference);
+            rowLayout->addWidget(reference);
+
+        }
+
+      ui->verticalLayout_display_items->addLayout(rowLayout);
     }
 }
 
@@ -69,6 +86,51 @@ void Add_Elem_To_Table_Dialog::on_actiongoBack_triggered()
 void Add_Elem_To_Table_Dialog::on_pushButton_create_sql_clicked()
 {
     QMessageBox::information(this, "SQL", "creating sql statement...");
+    QString table_name = this->create_table->get_table_name();
+    if (table_name.isEmpty())
+    {
+        QMessageBox::warning(this, "Table Name", "Please enter a tabel name ");
+        return;
+    }
+    QString elems, types, roles, formatted, ref;
+    this->sql_elems.clear(); // make sure the list is empty
+
+    for (int i = 0; i < this->elemFields.size(); ++i )
+    {
+        elems = this->elemFields[i]->text();
+        types = this->typeFields[i]->currentText();
+        if(i < this->roleFields.size())
+            roles = this->roleFields[i]->currentText();
+        if(i < this->referenceFields.size())
+            ref = this->referenceFields[i]->text();
+        formatted = elems;
+        if (!roles.isEmpty() && roles != "Element Role") {
+            if(roles == "PRIMARY KEY")
+                formatted += " INTEGER PRIMARY KEY AUTOINCREMENT ";
+            else if (roles == "FOREIGN KEY")
+                formatted += " " + types + " REFERENCES " + ref;
+            else
+                formatted += " " + types + " " + roles;
+        }else
+            formatted = elems + " " + types;
+        this->sql_elems.append(formatted);
+
+    }
+
+    // passing list to method table creator
+    for (int i = 0; i < sql_elems.size(); ++i)
+        qDebug() << sql_elems;
+
+    if(!db_instance->check_status())
+
+        QMessageBox::warning(this, "Database connection ", "faliure");
+    bool success = db_instance->build_table(this->sql_elems, table_name);
+    if(success)
+        QMessageBox::information(this, "Success", "Table was created");
+    else
+        QMessageBox::warning(this, "Faliure", "Table could not be created");
+
+
 
 }
 
