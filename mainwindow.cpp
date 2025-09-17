@@ -14,15 +14,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
-
     ui->setupUi(this);
     // Add image to window
     //QPixmap pix("/res/documentation/GPA-Calculator-2.png");
     //ui->label->setPixmap(pix.scaled(300, 500, Qt::KeepAspectRatio));
     qDebug()<<QSqlDatabase::drivers();
-
-
 }
 
 MainWindow::~MainWindow()

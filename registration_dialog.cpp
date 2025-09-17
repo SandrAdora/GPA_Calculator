@@ -95,34 +95,23 @@ void registration_Dialog::on_pushButton_signUp_clicked()
     if(!ok)
         QMessageBox::warning(this, "Database Connection", "No Connection possible");
 
-    ok = this->admnistration->add_student(cours, fullname, birthdate, gender, email, password);
-    if(ok)
+    if(major == "Administrator")
     {
-          QMessageBox::information(this, " Add new Admin ", "success...");
-        if(major == "Administrator")
+        ok = this->admnistration->add_neww_admin(fullname, birthdate, gender, email , password);
+        if(ok)
         {
+
             Admin_Dialog* adminSignIn = new Admin_Dialog();
             adminSignIn->show();
 
         }
-        QMessageBox::information(this, " Add new Student ", "success...");
-        this->hide();
-        signIn = new signIn_Dialog(this);
-        signIn->show();
-
-
     }
     else
     {
-        QMessageBox::warning(this, "Add new User", " failed...");
+        this->hide();
+        signIn = new signIn_Dialog(this);
+        signIn->show();
     }
-
-
-
-
-
-
-
 }
 
 

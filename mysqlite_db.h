@@ -6,13 +6,13 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QDebug>
-#include <exception>
-#include <iostream>
 #include <qsqlquery.h>
 #include <vector>
 #include <string>
 #include <QMessageBox>
-
+#include <cstdarg>
+#include <QVariantList>
+#include <iostream>
 #include "student.h"
 
 
@@ -28,46 +28,61 @@ public:
 
      MySqlite_db* get_instance();  // instance Method
     ~MySqlite_db();
+     MySqlite_db(QString&, QString = ""); // constructor with names for creating new database or inserting into existing one in another table
+     MySqlite_db(); // default constructor
 
      // dynamic Method to create the database table
     string build_create_table_sql(const vector<string>&);
     string create_tables(int ); // amount or rows the database table should have
     bool build_table(QStringList&, str&, str = ""); // list of sql statements & name of the table and references if available
+    bool check_if_table_exist(str&); // searches for table existance
 
 
-    // Build Connection to existing database 
-    void build_connection_database();
-    bool check_status();
-    void disconnect_db();
+    // Build Connection to existing database
+    bool is_connected();
+    void disconnect();
+    bool connect();
 
     // Operations
-    bool insert_student( QString& ,QString&, QDate&, int&, QString&, QString&); // fullname, date, gender, email and password
-    bool insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects.
+    bool insert_student( QString& ,QString&, QDate&, int&, QString&, QString&, double&); // fullname, date, gender, email and password...--> if more args needed
 
+    bool insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects,
     Student* get_student(int&); // return the infos of a specific student
     bool delete_student(int&); // id
-    void update_student(int&, QString&); // 2nd var. should be what chould be updated
+    bool delete_subject(int&); // sub. id
+    bool delete_admin(int&); // admin id
+    bool update_student_gpa(const int&, const float) ; // student id, new gpa
+    bool update_student_name(const int&, const QString&); // student id, new student name
+    bool update_student_email(const int&, const QString&); // student id, new email
+    bool update_student_password(const int&, const QString&); // student id, new password
+    bool update_subject_name(const int&, const QString&); // subject id, new subject name
+    bool update_subject_ect(const int&, const float&); // subject id, new ects
+    bool update_subject_weights(const int&, const int&); // subject id, new weights
 
-    bool instert_new_admin(str&, QDate&, str&, str&, str&); // full name of a new admin, date , gender, email and password
+    bool update_admin_name(const int&, const QString&); // admin id, new admin name
+    bool update_admin_email(const int&, const QString&); // admin id, new  admin email
+    bool update_admin_password(const int&, const QString&); // admin id, new admin password
 
-    int& get_sudent_id() const;
-    int& get_subject_id() const;
-    int& get_admin_id() const;
+    bool insert_new_admin(str&, QDate&, str&, str&, str&); // full name of a new admin, date , gender, email and password
 
-    query get_students() const;
+    int& get_sudent_id(const QString& ); // student name
+    int& get_subject_id(const QString& ); // subject name
+    int& get_admin_id(const QString& ); // admin's name
+
+    query get_students() ;
     query get_student_info(int&, str&); // ID and what info should be retrieved
     query get_subjects() const;
-    query get_student_subjects(int&, str&) const; // id and what info should be retrieved
-    query get_admins() const;
+    query get_student_subjects(int&, str&) ; // id and what info should be retrieved
+    query get_admins() ;
     
 
-    MySqlite_db(QString&, QString = "");
-    MySqlite_db();
+
 private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection
-    QString default_db;
-    QString default_db_name;
+    QString default_db; // available database driver default is sqlite
+    QString default_db_name; // name of the database table
+    QString database_path = "C:/Database/database";
 };
 
 #endif // MYSQLITE_DB_H

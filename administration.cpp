@@ -95,18 +95,19 @@ bool Administration::add_student(Courses& course, QString &name, QDate &geb, QSt
         gender = (int)Gender::NOTHING;
 
     // adding new student into the database
-    const str table_name = "student";
+    const str table_name = "students";
     bool table_exists = false;
 
 
-    if(!db->get_instance())
+    if(!db->get_instance()->check_status())
     {
         return false;
     }
     students.push_back(move(sptr)); // adds a new student to the vector using the same singleton pointer
     // since downcast ptr now belongst to sptr must be reseted in order to be used again
     ptr.reset();
-    return db->insert_student(student_course, name, geb, gender, em, ps);
+    double gpa = .00;
+    return db->get_instance()->insert_student(student_course, name, geb, gender, em, ps, gpa);
 
 }
 void Administration::add_new_subjects(QString& name, int& e, double& w){

@@ -16,8 +16,6 @@ Add_Elem_To_Table_Dialog::Add_Elem_To_Table_Dialog(Create_Table_Dialog* sourceDi
     available_elems();
     ui->label_table_name->setText(this->create_table->get_table_name());
     this->go_back_menu();
-
-
 }
 
 Add_Elem_To_Table_Dialog::~Add_Elem_To_Table_Dialog()
@@ -30,16 +28,12 @@ void Add_Elem_To_Table_Dialog::available_elems()
     bool ok;
     int cols = this->create_table->get_column().toInt(&ok);
     if (!ok || cols <= 0) return;
-
-
-
     QStringList typesList = {"Element type", "INTEGER", "REAL", "TEXT", "BLOB", ""};
     QStringList rolesList = {"Element role", "PRIMARY KEY", "FOREIGN KEY", ""};
 
     for (int i = 0; i < cols; ++i)
     {
         QHBoxLayout* rowLayout = new QHBoxLayout;
-
 
         elem = new QLineEdit;
         elem->setPlaceholderText( QString::number(i + 1) + " Element");

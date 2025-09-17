@@ -63,6 +63,8 @@ void Admin_Profile_Dialog::current_date()
 void Admin_Profile_Dialog::on_pushButton_view_table_clicked()
 {
     // open another dialog that shows all tables available in the database
-
+    hide();
+    this->view_tab = new Dialog_view_tables(this);
+    this->view_tab->show();
 }
 

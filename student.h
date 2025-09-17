@@ -33,8 +33,8 @@ class Student : public Person
 {
 public:
     Student();
-    Student(int, QString, QDate, Gender, QString, QString, Courses);
-    Student(Courses, QString, QDate, Gender, QString, QString);
+    Student(int, QString, QDate, Gender, QString, QString, Courses, double);
+    Student(Courses, QString, QDate, Gender, QString, QString, double);
     Student(QString, QDate, Gender, QString, QString);
 
 
@@ -42,6 +42,7 @@ public:
     QString get_course_str() const;
     Courses get_course_cour(QString& major) ;
     int get_id()const;
+    double get_gpa() const;
 
 
     // Redefination of methods from the super class
@@ -60,6 +61,7 @@ public:
 protected:
     int student_id;
     int course;
+    double gpa;
 
 };
 

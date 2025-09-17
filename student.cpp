@@ -15,7 +15,9 @@ Student::Student() {
     this->course = Courses::Artificial_Intelligence;
 
 }
-Student::Student(int id, QString name, QDate dat, Gender gen, QString em, QString pw, Courses cs){
+
+
+Student::Student(int id, QString name, QDate dat, Gender gen, QString em, QString pw, Courses cs, double gpa){
     this->fullname = name;
     this->email = em;
     this->gender = gen;
@@ -23,15 +25,17 @@ Student::Student(int id, QString name, QDate dat, Gender gen, QString em, QStrin
     this->student_id = id;
     this->course = cs;
     this->student_id = id;
+    this->gpa = gpa;
 
 }
-Student::Student(Courses cs, QString name, QDate d, Gender g, QString em, QString pw){
+Student::Student(Courses cs, QString name, QDate d, Gender g, QString em, QString pw, double gp){
     this->fullname = name;
     this->email = em;
     this->course = cs;
     this->birthdate = d;
     this->gender = g;
     this->password = pw;
+    this->gpa = gp;
 
 }
 Student::Student( QString name, QDate d, Gender g, QString em, QString pw){
@@ -41,7 +45,6 @@ Student::Student( QString name, QDate d, Gender g, QString em, QString pw){
     this->birthdate = d;
     this->gender = g;
     this->password = pw;
-
 }
 
 

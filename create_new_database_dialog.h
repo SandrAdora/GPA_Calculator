@@ -23,11 +23,13 @@ private slots:
     void on_pushButton_connect_db_clicked();
 
     void on_pushButton_disconnect_db_clicked();
+    void on_actiongoback_triggered();
 
 private:
     Ui::Create_new_Database_Dialog *ui;
     void populateDBCombo();
     void get_dbs();
+    void goBack();
     QStringList db_list;
     MySqlite_db* createDB = new MySqlite_db();
     MySqlite_db* connection_db;

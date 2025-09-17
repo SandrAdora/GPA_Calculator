@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDate>
 #include <QVBoxLayout>
+#include "dialog_view_tables.h"
 
 namespace Ui {
 class Admin_Profile_Dialog;
@@ -29,6 +30,7 @@ private:
     Ui::Admin_Profile_Dialog *ui;
     QDate _date;
     QVBoxLayout* vlayout;
+    Dialog_view_tables* view_tab;
 
     void current_date();
 

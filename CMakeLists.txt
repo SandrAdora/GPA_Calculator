@@ -53,6 +53,7 @@ add_executable(GPA_Calculator
     create_table_dialog.h create_table_dialog.cpp create_table_dialog.ui
     add_elem_to_table_dialog.h add_elem_to_table_dialog.cpp add_elem_to_table_dialog.ui
     create_new_database_dialog.h create_new_database_dialog.cpp create_new_database_dialog.ui
+    dialog_view_tables.h dialog_view_tables.cpp dialog_view_tables.ui
 
 )
 

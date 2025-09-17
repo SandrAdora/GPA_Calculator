@@ -1,5 +1,9 @@
 #include "create_new_database_dialog.h"
 #include "ui_create_new_database_dialog.h"
+#include <QMenu>
+#include <QVBoxLayout>
+#include "admin_profile_dialog.h"
+#include <QIcon>
 
 Create_new_Database_Dialog::Create_new_Database_Dialog( QWidget *parent)
     : QDialog(parent)
@@ -8,6 +12,7 @@ Create_new_Database_Dialog::Create_new_Database_Dialog( QWidget *parent)
 {
     ui->setupUi(this);
     this->populateDBCombo();
+    this->goBack();
 }
 
 Create_new_Database_Dialog::~Create_new_Database_Dialog()
@@ -28,6 +33,20 @@ void Create_new_Database_Dialog::get_dbs()
 
 }
 
+void Create_new_Database_Dialog::goBack()
+{
+    // adding a goback button
+    QMenu* menu = new  QMenu(this);
+    QAction* actio = new QAction( QIcon(":/icons/documentation/logos/back.png"), "Back", this);
+    connect(actio, &QAction::triggered, this, &Create_new_Database_Dialog::on_actiongoback_triggered);
+
+    QVBoxLayout* vl = new QVBoxLayout;
+
+    menu->addAction(actio);
+    vl->addWidget(menu);
+    ui->verticalLayout_new_db_goback->addLayout(vl);
+}
+
 void Create_new_Database_Dialog::on_pushButton_connect_db_clicked()
 {
     // build connection with the db the user selected
@@ -41,8 +60,6 @@ void Create_new_Database_Dialog::on_pushButton_connect_db_clicked()
     else
         QMessageBox::warning(nullptr, "Database Connection", "Could not be found...");
 
-
-
 }
 
 
@@ -50,5 +67,13 @@ void Create_new_Database_Dialog::on_pushButton_disconnect_db_clicked()
 {
     this->connection_db->disconnect_db();
     QMessageBox::information(this, "Database Disconnection", "disconnecting database...successeded");
+}
+
+void Create_new_Database_Dialog::on_actiongoback_triggered()
+{
+    hide();
+    Admin_Profile_Dialog*  di = new Admin_Profile_Dialog(this);
+    di->show();
+
 }
 
