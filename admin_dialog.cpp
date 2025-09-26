@@ -14,6 +14,19 @@ Admin_Dialog::Admin_Dialog( QWidget *parent)
 Admin_Dialog::~Admin_Dialog()
 {
     delete ui;
+    if(this->reg != nullptr)
+    {
+        delete this->reg;
+        this->reg = nullptr;
+
+    }
+    if(this->admin != nullptr)
+    {
+        delete this->admin;
+        this->admin = nullptr;
+    }
+
+
 
 }
 
