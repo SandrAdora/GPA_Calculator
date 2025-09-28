@@ -5,7 +5,7 @@
 #include <QString>
 #include <QDate>
 #include <memory>
-
+#include <QSqlQuery>
 
 #include "student.h"
 #include "subject.h"
@@ -50,6 +50,7 @@ class Administration : public Student , Admin
 {
 public:
     static Administration* Instance(); // Instance
+    Administration* get_administration();
 
     unique_ptr<Person> FactoryMethod(); // factory method for creating different obj. like student or admin
 
@@ -57,32 +58,42 @@ public:
     unique_ptr<Person> create_object(MethodType& ); // call factory method and returns requested obj
 
 
-    bool add_neww_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
-    bool add_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email and password
-    void add_new_subjects(QString&, int&, double&); // name of subject, ects and weights of each subjects
-    bool delete_subject(int); // id of subject to be deleted
+
+
+    std::vector<Student*> get_student(const QString, const QString); // get a specific student
+    std::vector<Student*> view_all_student() const; // returns a list of all students
     void view_all_subjects() const;
+    bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
     bool delete_student(int &); // id of student to be deleted
-    void display_all_Students() const;
     bool update_student_name(int&, QString); // id of student and what operation should be done
-    bool update_subject_ect(int&, int); // id and ect
+
+
+    bool register_subject(QString&, int&, double&); // name of subject, ects and weights of each subjects
+    bool delete_subject(int); // id of subject to be deleted
+    bool update_subject_ect(int&, double&); // id and ect
     bool update_subject_name(int&, QString&); // id and name of the object
     bool update_subject_weights(int& ,double); // id and new weights for subject
-    bool add_new_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
-    bool update_admin_name(int&, QString); // id of an admin and new name
+    std::vector<Subject*> view_all_subject() const; //returns a ist of all subjects
+    std::vector<Subject*> get_subject(const QString, const QString); // gets a specific subject
+    std::vector<Subject*> subjects;
+
     bool update_admin_birthdate(int& Qdate);
+    bool register_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
     bool update_admin_email(int, QString); // id and new email
-
-    std::vector<Student> view_all_student() const; // returns a list of all students
-    std::vector<Admin> view_all_admin() const; // resturns a list of all admins
-    std::vector<Subject> view_all_subject() const; //returns a ist of all subjects
-
+    bool update_admin_name(int&, QString); // id of an admin and new name
+    std::vector<Admin*> get_admin(const QString, const QString); // get a specific admin
+    std::vector<Admin*> view_all_admin() const; // resturns a list of all admins
     bool delete_admin(int&);
 
 
-    // unequal operator
+    bool check_email(QString&);
 
 
+
+    // for each view and get obj an aquivalent qsql statement is needed
+    std::vector<Student*>_sql(QSqlQuery);
+    std::vector<Admin*>A_sql(QSqlQuery);
+    std::vector<Subject*>S_sql(QSqlQuery);
 
 
 
@@ -92,9 +103,10 @@ protected:
 private:
     std::vector<std::unique_ptr<Student>>students;
     MethodType type;
-    std::vector<Subject*> subjects;
+
     std::vector<std::unique_ptr<Admin>> admins;
     unique_ptr<Person> ptr;
+    Student* student_instance;
     static Administration* _instance;
     MySqlite_db* db;
 

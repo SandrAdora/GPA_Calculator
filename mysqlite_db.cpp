@@ -16,7 +16,10 @@ MySqlite_db::MySqlite_db() {
     this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
     this->db_connection.setDatabaseName(this->default_db_name);
     if (!this->db_connection.open()) {
-        QMessageBox::critical(nullptr, "Database Error", this->db_connection.lastError().text());
+        QMessageBox::critical(nullptr, "Database Connection", this->db_connection.lastError().text());
+    }else
+    {
+        QMessageBox::information(nullptr, "Database connection", "success");
     }
 }
 
@@ -44,36 +47,90 @@ bool MySqlite_db::is_connected() {
     return this->db_connection.isValid() && this->db_connection.isOpen();
 }
 
-bool MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& birthdate,
+int MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& birthdate,
                                  int& gender, QString& email,  QString& password, double& gpa) {
-    if (!is_connected()) return false;
-
+    if (!is_connected())
+    {
+        qDebug() << "Connection error: ";
+        return 0;
+    }
+    static int id = -1;
+    QString gdate = birthdate.toString("dd.mm.yyyy");
     QSqlQuery query;
-    query.prepare("INSERT INTO student (course, fullname, birthdate, gender, email, password, gpa) "
-                  "VALUES (:course, :fullname, :birthdate, :gender, :email, :password, :gpa)");
+    query.prepare("INSERT INTO student (student_id, course, fullname, birthdate, gender, email, password, gpa) "
+                  "VALUES (null, :course, :fullname, :birthdate, :gender, :email, :password, :gpa)");
     query.bindValue(":course", course);
     query.bindValue(":fullname", fullname);
-    query.bindValue(":birthdate", birthdate);
+    query.bindValue(":birthdate", gdate);
     query.bindValue(":gender", gender);
     query.bindValue(":email", email);
     query.bindValue(":password", password);
     query.bindValue(":gpa", gpa);
 
-    return query.exec();
+
+    // execute request
+    if(!query.exec())
+    {
+        qDebug() << "Excecution error: " << query.lastError();
+        return 0;
+    }
+    query.prepare("select last_insert_rowid()");
+    if(query.exec())
+    {
+        query.next();
+        id = query.value(0).toInt();
+
+    }else {
+        qDebug() << "Adding student - retur id error: " << query.lastQuery();
+        qDebug() << "Error: " << query.lastError();
+    }
+
+    return id;
 }
 
-bool MySqlite_db::insert_subject(int& student_id,  QString& subject_name, int& weights, float& ects) {
-    if (!is_connected()) return false;
+int MySqlite_db::insert_subject(int& student_id,  QString& subject_name, int& weights, float& ects) {
+    if (!is_connected()) return -1;
+    static int id = -1;
 
     QSqlQuery query;
-    query.prepare("INSERT INTO subject (student_id, subject_name, weights, ects) "
-                  "VALUES (:student_id, :subject_name, :weights, :ects)");
+    query.prepare("INSERT INTO subject (subject_id, student_id, subject_name, weights, ects) "
+                  "VALUES (null,:student_id,:subject_name,:weights,:ects)");
     query.bindValue(":student_id", student_id);
     query.bindValue(":subject_name", subject_name);
     query.bindValue(":weights", weights);
     query.bindValue(":ects", ects);
 
-    return query.exec();
+    if(query.exec())
+    {
+        query.prepare("select last_insert_rowid()");
+        id = query.value(0).toInt();
+
+    }else
+    {
+        qDebug() << "Add Subject Id error: " << query.lastError();
+        qDebug() << "Last query before error occured: " << query.lastQuery();
+    }
+
+
+    return id;
+}
+
+QSqlQuery MySqlite_db::get_student_login(const QString email, const QString password)
+{
+    QSqlQuery query;
+    query.prepare(
+        "SELECT student_id, fullname, birthdate, gender, course, email, password, gpa"
+        "FROM student where email=:email and password=:password");
+    query.bindValue(":email", email);
+    query.bindValue(":password", password);
+    if(!query.exec())
+    {
+        qDebug() <<"Get student login details error:" << query.lastError();
+        qDebug() << ", last error: " << query.lastError();
+    }
+
+    return query;
+
 }
 
 query MySqlite_db::get_students()
@@ -116,20 +173,37 @@ query MySqlite_db::get_student_info(int &id, str &choice)
 
 }
 
-bool MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,
-                                    QString& gender,  QString& email,  QString& password) {
-    if (!is_connected()) return false;
+int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QString& gender,  QString& email,  QString& password) {
+    if (!is_connected())
+        return -1;
+    static int id = -1;
+
 
     QSqlQuery query;
-    query.prepare("INSERT INTO admin (fullname, birthdate, gender, email, password) "
-                  "VALUES (:fullname, :birthdate, :gender, :email, :password)");
+    QString gdate = birthdate.toString("dd.mm.yyyy");
+    query.prepare("INSERT INTO admin (admin_id,fullname, birthdate, gender, email, password) "
+                  "VALUES (null,:fullname, :birthdate, :gender, :email, :password)");
     query.bindValue(":fullname", fullname);
-    query.bindValue(":birthdate", birthdate);
+    query.bindValue(":birthdate", gdate);
     query.bindValue(":gender", gender);
     query.bindValue(":email", email);
     query.bindValue(":password", password);
+    if(!query.exec())
+    {
+        qDebug() << "Insert new admin error: " << query.lastError();
+        return 0;
+    }
+    query.prepare("select last_insert_rowid()");
+    if(query.exec())
+        id = query.value(0).toInt();
+    else
+    {
+        qDebug()<< "Inser Admin ID error: " << query.lastError()
+                 << "Last query: " << query.lastQuery();
+        return -1;
+    }
+    return id;
 
-    return query.exec();
 }
 
 bool MySqlite_db::check_if_table_exist( QString& table_name) {

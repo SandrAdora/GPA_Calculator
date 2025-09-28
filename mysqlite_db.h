@@ -44,10 +44,12 @@ public:
     bool connect();
 
     // Operations
-    bool insert_student( QString& ,QString&, QDate&, int&, QString&, QString&, double&); // fullname, date, gender, email and password...--> if more args needed
+    int insert_student( QString& ,QString&, QDate&, int&, QString&, QString&, double&); // fullname, date, gender, email and password...--> if more args needed
 
-    bool insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects,
-    Student* get_student(int&); // return the infos of a specific student
+    int insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects,
+    QSqlQuery get_student(int&); // return the infos of a specific student
+    QSqlQuery get_student_login(const QString, const QString);
+
     bool delete_student(int&); // id
     bool delete_subject(int&); // sub. id
     bool delete_admin(int&); // admin id
@@ -63,7 +65,7 @@ public:
     bool update_admin_email(const int&, const QString&); // admin id, new  admin email
     bool update_admin_password(const int&, const QString&); // admin id, new admin password
 
-    bool insert_new_admin(str&, QDate&, str&, str&, str&); // full name of a new admin, date , gender, email and password
+    int insert_new_admin(str&, QDate&, str&, str&, str&); // full name of a new admin, date , gender, email and password
 
     int& get_sudent_id(const QString& ); // student name
     int& get_subject_id(const QString& ); // subject name
