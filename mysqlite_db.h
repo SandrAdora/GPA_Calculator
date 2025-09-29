@@ -39,7 +39,6 @@ public:
 
 
     // Build Connection to existing database
-    bool is_connected();
     void disconnect();
     bool connect();
 

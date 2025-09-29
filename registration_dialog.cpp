@@ -91,13 +91,13 @@ void registration_Dialog::on_pushButton_signUp_clicked()
     // add input to database
 
     bool ok = false;
-    ok  = this->db_in->get_instance()->check_status();
+    ok  = this->db_in->get_instance()->connect();
     if(!ok)
         QMessageBox::warning(this, "Database Connection", "No Connection possible");
 
     if(major == "Administrator")
     {
-        ok = this->admnistration->add_neww_admin(fullname, birthdate, gender, email , password);
+        ok = this->admnistration->register_admin(fullname, birthdate, gender, email , password);
         if(ok)
         {
 

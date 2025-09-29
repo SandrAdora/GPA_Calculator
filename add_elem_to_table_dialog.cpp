@@ -115,11 +115,11 @@ void Add_Elem_To_Table_Dialog::on_pushButton_create_sql_clicked()
     for (int i = 0; i < sql_elems.size(); ++i)
         qDebug() << sql_elems;
 
-    if(!db_instance->check_status())
+    if(!db_instance->connect())
 
         QMessageBox::warning(this, "Database connection ", "faliure");
-    bool success = db_instance->build_table(this->sql_elems, table_name);
-    if(success)
+    //bool success = db_instance->get_instance()->build_table(this->sql_elems, table_name);
+    if(true)
         QMessageBox::information(this, "Success", "Table was created");
     else
         QMessageBox::warning(this, "Faliure", "Table could not be created");

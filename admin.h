@@ -34,7 +34,6 @@ public:
     str get_it_admin_password() const;
     int get_admin_id() const;
     bool admin_(str); // checks if password correspond with the IT password
-    bool add_new_admin(str&, QDate&, str&, str&); // fullname, birthdate,gender, email and password
 
 protected:
     int admin_id;

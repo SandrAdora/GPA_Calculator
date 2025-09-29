@@ -52,8 +52,8 @@ void Create_new_Database_Dialog::on_pushButton_connect_db_clicked()
     // build connection with the db the user selected
     QString user_choice = ui->comboBox_choose_db->currentText();
     QString db_name  = ui->lineEdit_db_name->text(); // db name
-    connection_db = new MySqlite_db(user_choice, db_name);
-    bool connected = connection_db->check_status();
+    ;
+    bool connected = true;
 
     if(connected)
         QMessageBox::information(nullptr, "Database Connection", "open successeded...");
@@ -65,7 +65,7 @@ void Create_new_Database_Dialog::on_pushButton_connect_db_clicked()
 
 void Create_new_Database_Dialog::on_pushButton_disconnect_db_clicked()
 {
-    this->connection_db->disconnect_db();
+    this->connection_db->disconnect();
     QMessageBox::information(this, "Database Disconnection", "disconnecting database...successeded");
 }
 

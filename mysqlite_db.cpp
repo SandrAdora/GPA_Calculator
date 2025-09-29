@@ -43,13 +43,11 @@ void MySqlite_db::disconnect() {
 }
 
 
-bool MySqlite_db::is_connected() {
-    return this->db_connection.isValid() && this->db_connection.isOpen();
-}
+
 
 int MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& birthdate,
                                  int& gender, QString& email,  QString& password, double& gpa) {
-    if (!is_connected())
+    if (!connect())
     {
         qDebug() << "Connection error: ";
         return 0;
@@ -89,7 +87,7 @@ int MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& bi
 }
 
 int MySqlite_db::insert_subject(int& student_id,  QString& subject_name, int& weights, float& ects) {
-    if (!is_connected()) return -1;
+    if (!connect()) return -1;
     static int id = -1;
 
     QSqlQuery query;
@@ -135,7 +133,7 @@ QSqlQuery MySqlite_db::get_student_login(const QString email, const QString pass
 
 query MySqlite_db::get_students()
 {
-    if (!is_connected())
+    if (!connect())
     {
         QMessageBox::warning(nullptr, "Database connection", "Failure..");
         return QSqlQuery();
@@ -153,7 +151,7 @@ query MySqlite_db::get_students()
 
 query MySqlite_db::get_student_info(int &id, str &choice)
 {
-    if(!is_connected())
+    if(!connect())
     {
         QMessageBox::warning(nullptr, "Student infos", "fail");
         return QSqlQuery(); // returning an empty query
@@ -174,7 +172,7 @@ query MySqlite_db::get_student_info(int &id, str &choice)
 }
 
 int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QString& gender,  QString& email,  QString& password) {
-    if (!is_connected())
+    if (!connect())
         return -1;
     static int id = -1;
 
@@ -207,7 +205,7 @@ int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QStrin
 }
 
 bool MySqlite_db::check_if_table_exist( QString& table_name) {
-    if (!is_connected()) return false;
+    if (!connect()) return false;
 
     QSqlQuery query("SELECT name FROM sqlite_master WHERE type='table' AND name=:table_name");
     query.bindValue(":table_name", table_name);
