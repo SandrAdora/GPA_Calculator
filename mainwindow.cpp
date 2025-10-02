@@ -41,10 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
             
             Create_new_Database_Dialog* dig = new Create_new_Database_Dialog();
             hide(); 
-            dig->show();
-            
-        }
-   
+            dig->show();           
+        } 
     }
     
 }
