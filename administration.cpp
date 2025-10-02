@@ -244,7 +244,7 @@ bool Administration::update_subject_weights(int& id ,double new_weights){
 bool Administration::check_email(QString &email)
 {
     QSqlQuery ql;
-     ql.prepare("select email from students where email=:email");
+    ql.prepare("select email from students where email=:email");
     ql.bindValue(":email", email);
     if(ql.exec())
         return true;
