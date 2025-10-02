@@ -51,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete signIn;
+    delete reg;
+    delete admin; 
     delete ui;
 }
 
