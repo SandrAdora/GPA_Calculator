@@ -75,6 +75,8 @@ public:
     query get_subjects() const;
     query get_student_subjects(int&, str&) ; // id and what info should be retrieved
     query get_admins() ;
+
+     bool create_db(QString&); // name of database to create
     
 
 
