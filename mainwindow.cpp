@@ -8,6 +8,7 @@
 #include <QSqlDatabase>
 #include <QDebug>
 #include <filesystem>
+#include "create_new_database_dialog.h"
 
 namesapace fs = std::filesystem;
 
@@ -37,6 +38,10 @@ MainWindow::MainWindow(QWidget *parent)
         if(this->db->get_instance() == nullptr )
         {
             qDebug() << "Database does not exists, please check for spelling or create the database ";
+            
+            Create_new_Database_Dialog* dig = new Create_new_Database_Dialog();
+            hide(); 
+            dig->show();
             
         }
    
