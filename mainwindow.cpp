@@ -34,9 +34,12 @@ MainWindow::MainWindow(QWidget *parent)
     QString db_ = "gpa_student.db";
     if(!db_file(db_))
     {
-        db_conn = QSQLDatabase::addDatabase("QSQLITE");
-        db_conn.setDatabaseName(db_);
-        db_conn.open(); 
+        if(this->db->get_instance() == nullptr )
+        {
+            qDebug() << "Database does not exists, please check for spelling or create the database ";
+            
+        }
+   
     }
     
 }
