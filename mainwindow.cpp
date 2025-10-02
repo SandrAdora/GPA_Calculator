@@ -10,7 +10,7 @@
 #include <filesystem>
 #include "create_new_database_dialog.h"
 
-namesapace fs = std::filesystem;
+namespace fs = std::filesystem;
 
 bool db_file(QString txt_path)
 {
@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     QString db_ = "gpa_student.db";
     if(!db_file(db_))
     {
-        if(this->db->get_instance() == nullptr )
+        if((this->db = Database::get_instance()) == nullptr )
         {
             qDebug() << "Database does not exists, please check for spelling or create the database ";
             
