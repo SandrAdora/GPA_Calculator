@@ -75,6 +75,9 @@ public:
     query get_subjects() const;
     query get_student_subjects(int&, str&) ; // id and what info should be retrieved
     query get_admins() ;
+
+     bool create_db(QString&); // name of database to create
+     void set_db_name(QString&); 
     
 
 
@@ -82,7 +85,7 @@ private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection
     QString default_db; // available database driver default is sqlite
-    QString default_db_name; // name of the database table
+    QString default_db_name = "gpa_student"; // name of the database table
     QString database_path = "C:/Database/database";
 };
 

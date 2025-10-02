@@ -7,8 +7,21 @@
 #include <QActionGroup>
 #include <QSqlDatabase>
 #include <QDebug>
+#include <filesystem>
+#include "create_new_database_dialog.h"
 
+namespace fs = std::filesystem;
 
+bool db_file(QString txt_path)
+{
+    if(fs::exists(txt_path))
+    {
+        qDebug() << "txt_path exists"; 
+        return true;    
+    }
+    qDebug() << "txt_path does not exists"; 
+    return false;
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,10 +32,26 @@ MainWindow::MainWindow(QWidget *parent)
     //QPixmap pix("/res/documentation/GPA-Calculator-2.png");
     //ui->label->setPixmap(pix.scaled(300, 500, Qt::KeepAspectRatio));
     qDebug()<<QSqlDatabase::drivers();
+    QString db_ = "gpa_student.db";
+    if(!db_file(db_))
+    {
+        if((this->db = Database::get_instance()) == nullptr )
+        {
+            qDebug() << "Database does not exists, please check for spelling or create the database ";
+            
+            Create_new_Database_Dialog* dig = new Create_new_Database_Dialog();
+            hide(); 
+            dig->show();           
+        } 
+    }
+    
 }
 
 MainWindow::~MainWindow()
 {
+    delete signIn;
+    delete reg;
+    delete admin; 
     delete ui;
 }
 
