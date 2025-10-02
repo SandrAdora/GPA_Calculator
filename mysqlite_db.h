@@ -77,6 +77,7 @@ public:
     query get_admins() ;
 
      bool create_db(QString&); // name of database to create
+     void set_db_name(QString&); 
     
 
 
