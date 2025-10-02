@@ -85,7 +85,7 @@ private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection
     QString default_db; // available database driver default is sqlite
-    QString default_db_name; // name of the database table
+    QString default_db_name = "gpa_student"; // name of the database table
     QString database_path = "C:/Database/database";
 };
 
