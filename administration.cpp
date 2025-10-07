@@ -7,7 +7,8 @@ using dbug = QDebug;
 Administration* Administration::_instance = nullptr;
 Administration::Administration() {
     ptr = nullptr;
-    this->db = this->db->get_instance(); // initialize the db
+
+
 
 }
 
@@ -19,9 +20,6 @@ Administration *Administration::get_administration()
     {
         try {
             this->_instance = new Administration();
-            {
-
-            }
 
         }catch(const std::exception& err) {
             qDebug() << err.what();
@@ -76,10 +74,10 @@ bool Administration::register_admin(QString &fullname, QDate &d, QString &g, QSt
         gender = (int)Gender::MALE;
     else if ( g == "female" || g == "Feamale")
         gender = (int)Gender::FEAMALE;
-    else if(g =="Dont disclose" || g == "Dont Disclos" || g == "dont disclos")
-        gender = (int)Gender::DONT_DISCLOSE;
-    else {
+    else if(g =="..." )
         gender = (int)Gender::NOTHING;
+    else {
+        gender = (int)Gender::NO_USER_INPUT;
     }
     admins.push_back(move(aptr)); // pushing student into the list
     ptr.reset();
@@ -110,7 +108,7 @@ bool Administration::register_student(Courses& course, QString &name, QDate &geb
 
     if( this->check_email(em))
     {
-        qDebug() << "Email already exists. Please register with a new emailadress";
+        qDebug() << "Email already exists. Please register with a new email address";
         return false;
     }
 
@@ -122,33 +120,15 @@ bool Administration::register_student(Courses& course, QString &name, QDate &geb
     unique_ptr<Student> sptr(dynamic_cast<Student*>(ptr.release())); //Safe downcast: because student inheritsfrom person, using dynamic cast on the pointer and wrapp it aoround an new unique pointer
     sptr->set_course(course);
     str student_course = sptr->get_course_str();
-    int gender = -1;
-    if (gen == "male" || "Male" )
-        gender = (int)Gender::MALE;
-    else if(gen == "female" || "Female")
-        gender = (int)Gender::FEAMALE;
-    else if(gen == "dont_disclose")
-        gender  = (int)Gender::DONT_DISCLOSE;
-    else
-        gender = (int)Gender::NOTHING;
-
-    // adding new student into the database
-    const str table_name = "students";
-    bool table_exists = false;
 
     students.push_back(move(sptr)); // adds a new student to the vector using the same singleton pointer
     // since downcast ptr now belongst to sptr must be reseted in order to be used again
-    ptr.reset();
-    double d_gpa;
-    if(gpa == "")
-        d_gpa=.00;
-    else
-    d_gpa=(double)gpa.toDouble();
-    int id =  db->get_instance()->insert_student(student_course, name, geb, gender, em, ps, d_gpa);
+
+    int id =  db->get_instance()->insert_student(student_course, name, geb, gen, em, ps, gpa);
 
     if(id < 0)
     {
-        qDebug() << "Error creating a new student";
+        qDebug() << "Administration: Error creating a new student";
         return false;
     }
     return true;
@@ -250,6 +230,7 @@ bool Administration::check_email(QString &email)
         return true;
     return false;
 }
+
 
 std::vector<Student*> Administration::_sql(QSqlQuery ql)
 {

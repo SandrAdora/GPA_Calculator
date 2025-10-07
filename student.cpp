@@ -9,10 +9,11 @@ Student::Student() {
     this->fullname = "";
     this->email = "school@example.com";
     this->password = "xxxxxx";
-    this->gender = Gender::DONT_DISCLOSE;
+    this->gender = Gender::NOTHING;
     this->birthdate = QDate(1990, 3, 13);
     this->student_id = -1;
     this->course = Courses::Artificial_Intelligence;
+    this->gpa = .00;
 
 }
 
@@ -52,8 +53,20 @@ void Student::set_course(Courses cs){
     this->course = cs;
 
 }
+/*This function will first convert the input str to real before assigning it to the attribtute*/
+void Student::set_gpa(QString &gpa)
+
+{
+    this->gpa = gpa.toDouble();
+
+}
 int Student::get_id() const {
     return this->student_id;
+}
+
+double Student::get_gpa() const
+{
+    return this->gpa;
 }
 QString Student::get_course_str() const
 {
@@ -86,7 +99,7 @@ QString Student::get_course_str() const
     return "";
 
 }
-Courses Student::get_course_cour(QString& major)
+Courses Student::get_course_cour(QString& major) const
 {
     if(major == "Architect")
         return Courses::Architect;

@@ -5,11 +5,13 @@
 #include <QWidget>
 #include <QLabel>
 #include <QToolBar>
+#include <QSqlDatabase>
 #include "registration_dialog.h"
 #include "signin_dialog.h"
 #include "admin_dialog.h"
-#include "mysqlite_db.h"
+
 #include <QtSql>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,6 +26,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
 
 
 private slots:
@@ -44,7 +47,6 @@ private:
     signIn_Dialog *signIn;
     registration_Dialog *reg;
     Admin_Dialog* admin;
-    MySqlite_db* db; 
 
 
 

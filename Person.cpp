@@ -4,7 +4,7 @@ Person::Person(){
     this->fullname = "";
     this->email = "school@example.com";
     this->password = "xxxxxx";
-    this->gender = Gender::DONT_DISCLOSE;
+    this->gender = Gender::NOTHING;
     this->birthdate = QDate(1990, 3, 13);
 
 }
@@ -25,8 +25,8 @@ QString Person::convertToString(Gender gen){
         return "female";
     }else if (gen == Gender::MALE){
         return "male";
-    }else if(gen == Gender::DONT_DISCLOSE){
-        return "dont disclose";
+    }else if(gen == Gender::NOTHING){
+        return "...";
     }
     return ""; // return empty string if no input match
 }
@@ -35,7 +35,7 @@ Gender Person::convertStringToInt(QString& gen){
         return Gender::MALE;
     else if(gen == "female")
         return Gender::FEAMALE;
-    else
-        return Gender::DONT_DISCLOSE;
+
     return Gender::NOTHING;
+
 }

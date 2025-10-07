@@ -4,6 +4,7 @@
 #include "administration.h"
 #include "admin_dialog.h"
 #include <QMessageBox>
+#include "mysqlite_db.h"
 
 registration_Dialog::registration_Dialog(QWidget *parent)
     : QDialog(parent)
@@ -27,7 +28,7 @@ registration_Dialog::~registration_Dialog()
 void registration_Dialog::getCoursesList()
 {
     coursesList = {
-        "As",
+        "As:",
         "Mathematics",
         "Informatics",
         "Medical Informatics",
@@ -56,13 +57,11 @@ void registration_Dialog::getGenders()
 {
     // in this section the list will be populated
     genderList = {
-        "Choose your gender",
+        "other",
         "Male",
         "Female",
-        "Dont want to Disclose",
 
     };
-
 }
 
 void registration_Dialog::populateComboGender()
@@ -81,36 +80,58 @@ void registration_Dialog::on_pushButton_signUp_clicked()
     QString gender = ui->comboBox_gender->currentText();
     QString email = ui->lineEdit_email->text();
     QString password = ui->lineEdit_password->text();
+    QString curr_gpa = ui->lineEdit_current_gpa->text();
 
-    // pass the inputs to database
-    Courses cours = this->admnistration->get_course_cour(major);
-    //Gender gen = this->admnistration->get_gender();
-    //admnistration->add_student(cours, fullname,birthdate, gender, email, password);
-
-
-    // add input to database
-
-    bool ok = false;
-    ok  = this->db_in->get_instance()->connect();
-    if(!ok)
-        QMessageBox::warning(this, "Database Connection", "No Connection possible");
-
+    this->hide();
     if(major == "Administrator")
     {
-        ok = this->admnistration->register_admin(fullname, birthdate, gender, email , password);
-        if(ok)
+        // add infos to adimistration class
+
+        if(this->admnistration->register_admin( fullname, birthdate, gender, email, password))
         {
 
             Admin_Dialog* adminSignIn = new Admin_Dialog();
             adminSignIn->show();
-
+        }else  {
+            qDebug() << "Error: Creating a new Admin";
         }
     }
     else
     {
-        this->hide();
-        signIn = new signIn_Dialog(this);
-        signIn->show();
+        Student* obj = new Student();
+        // pass all infos to administration before  opening a new dialog
+        // normally an obj isnt needed, but in this case it is needed in order to convert the courses to string
+        Courses cor = obj->get_course_cour(major);
+        QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE");
+        db_connection.setDatabaseName(DATABASE);
+
+        // check if file exists
+        if(QFile::exists(DATABASE)){
+
+            qDebug() << "File exists, check connection to the database";
+            if (!db_connection.open()) {
+                QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
+                return;
+            }
+
+        }else{
+            QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
+            return;
+        }
+        QSqlQuery query;
+        query = QSqlQuery(db_connection);
+        QString b_date = birthdate.toString();
+        query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, current_gpa ) VALUES('" + major + "','" + fullname + "','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + curr_gpa+ "' )");
+
+        if( query.exec())
+        {
+            signIn = new signIn_Dialog(this);
+            signIn->show();
+        }else {
+            qDebug() << "Error: Creating a new Student " << query.lastError().text()   << " last query: " << query.lastQuery();
+        }
+
+        db_connection.close();
     }
 }
 

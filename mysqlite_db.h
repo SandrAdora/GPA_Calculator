@@ -1,6 +1,7 @@
 #ifndef MYSQLITE_DB_H
 #define MYSQLITE_DB_H
 
+#define DATABASE = "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db
 #include <QString>
 #include <QSqlQuery>
 #include <QSqlDatabase>
@@ -13,6 +14,11 @@
 #include <cstdarg>
 #include <QVariantList>
 #include <iostream>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <QFile>
+
 #include "student.h"
 
 
@@ -20,6 +26,9 @@ using str = QString;
 using query = QSqlQuery;
 using Db = QSqlDatabase;
 using namespace std;
+
+namespace fs = std::filesystem;
+
 
 class MySqlite_db
 {
@@ -43,7 +52,7 @@ public:
     bool connect();
 
     // Operations
-    int insert_student( QString& ,QString&, QDate&, int&, QString&, QString&, double&); // fullname, date, gender, email and password...--> if more args needed
+    int insert_student( QString& ,QString&, QDate&, QString&, QString&, QString&, QString&); // fullname, date, gender, email and password...--> if more args needed
 
     int insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects,
     QSqlQuery get_student(int&); // return the infos of a specific student
@@ -77,16 +86,24 @@ public:
     query get_admins() ;
 
      bool create_db(QString&); // name of database to create
-     void set_db_name(QString&); 
-    
+     void set_db_name(QString&);
+     void set_db_path(QString&);
+
+     QString get_default_db_name() const;
+     QString get_database_path() const;
+     QString get_default_driver() const;
+
+     // helper functions
+     auto toFilesystemPath(QString& );
+
 
 
 private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection
     QString default_db; // available database driver default is sqlite
-    QString default_db_name = "gpa_student"; // name of the database table
-    QString database_path = "C:/Database/database";
+    QString default_db_name; // name of the database table
+    QString database_path;
 };
 
 #endif // MYSQLITE_DB_H

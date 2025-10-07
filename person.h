@@ -9,7 +9,7 @@
 
 enum Gender{
 
-    MALE, FEAMALE, DONT_DISCLOSE, NOTHING
+    MALE, FEAMALE, NO_USER_INPUT, NOTHING
 };
 
 // Factory method

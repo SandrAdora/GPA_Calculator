@@ -31,9 +31,8 @@ Admin::Admin(QString &fullname, QDate &d, QString &g, QString &e)
         gen = Gender::MALE;
     else if(g == "female" || g == "Female")
         gen = Gender::FEAMALE;
-    else if(g == "Dont disclose" || g == "dont disclosr" || g == "Dont Disclose")
-        gen = Gender::DONT_DISCLOSE;
-    else
+    else if(g == "...")
+
         gen = Gender::NOTHING;
 
     this->fullname = fullname;
