@@ -1,7 +1,7 @@
 #ifndef MYSQLITE_DB_H
 #define MYSQLITE_DB_H
 
-#define DATABASE = "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db
+#define DATABASE "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db"
 #include <QString>
 #include <QSqlQuery>
 #include <QSqlDatabase>

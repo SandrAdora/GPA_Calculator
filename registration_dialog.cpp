@@ -111,6 +111,7 @@ void registration_Dialog::on_pushButton_signUp_clicked()
             qDebug() << "File exists, check connection to the database";
             if (!db_connection.open()) {
                 QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
+                qDebug() << "Error: " << db_connection.lastError();
                 return;
             }
 
@@ -121,7 +122,7 @@ void registration_Dialog::on_pushButton_signUp_clicked()
         QSqlQuery query;
         query = QSqlQuery(db_connection);
         QString b_date = birthdate.toString();
-        query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, current_gpa ) VALUES('" + major + "','" + fullname + "','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + curr_gpa+ "' )");
+        query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + major + "','" + fullname + "','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + curr_gpa+ "' )");
 
         if( query.exec())
         {
