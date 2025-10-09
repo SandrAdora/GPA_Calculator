@@ -60,24 +60,29 @@ void MySqlite_db::disconnect() {
 
 int MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& birthdate,
                                  QString& gender, QString& email,  QString& password, QString& gpa) {
-    if (!this->connect())
-    {
-        qDebug() << "MySqlite: Connection error: " << this->db_connection.isOpenError();
+
+    static int id = -1;
+
+
+    // check if file exists
+    if(QFile::exists(DATABASE)){
+
+        qDebug() << "File exists, check connection to the database";
+        if (!db_connection.open()) {
+            QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
+            qDebug() << "Error: " << db_connection.lastError();
+            return -1;
+        }
+
+    }else{
+        QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
         return -1;
     }
-    static int id = -1;
-    QString gdate = birthdate.toString("dd.mm.yyyy");
     QSqlQuery query;
     query = QSqlQuery(this->db_connection);
-    query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + course + "','" + fullname + "','" + gdate + "','" + email + "','" + password + "','" + gender + "', '" + gpa + "' )");
+    QString b_date = birthdate.toString();
+    query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + course + "','" + fullname + "','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + gpa+ "' )");
 
-
-    // execute request
-    if(!query.exec())
-    {
-        qDebug() << "MySqlite Excecution error: " << query.lastError().text();
-        return -1;
-    }
     query.prepare("select last_insert_rowid()");
     if(query.exec())
     {
@@ -88,7 +93,7 @@ int MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& bi
         qDebug() << "Adding student - return id error: " << query.lastQuery();
         qDebug() << "Error: " << query.lastError().text();
     }
-    this->disconnect();
+
     return id;
 }
 
