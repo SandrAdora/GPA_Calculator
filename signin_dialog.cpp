@@ -34,11 +34,15 @@ void signIn_Dialog::on_pushButton_clicked()
 
     if(query.exec())
     {
+        QMessageBox::information(this, "Login Status", " successful");
         hide();
         this->pro = new student_profile_Dialog(this);
         this->pro->show();
 
     }
+    QMessageBox::warning(this, "Login Status"," failed");
+    db_connection.close();
+    return;
 
 }
 
