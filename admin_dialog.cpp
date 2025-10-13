@@ -9,6 +9,7 @@ Admin_Dialog::Admin_Dialog( QWidget *parent)
 {
     ui->setupUi(this);
 
+
 }
 
 Admin_Dialog::~Admin_Dialog()
@@ -30,13 +31,19 @@ Admin_Dialog::~Admin_Dialog()
 
 }
 
+bool Admin_Dialog::get_box() const
+{
+    // return check state
+    return ui->checkBox_new_admin->isChecked();
+}
+
 
 
 
 void Admin_Dialog::on_checkBox_new_admin_clicked()
 {
     hide();
-    reg = new registration_Dialog(this);
+    reg = new registration_Dialog();
     reg->show();
 }
 

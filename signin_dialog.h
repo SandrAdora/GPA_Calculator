@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include "student_profile_dialog.h"
+#include <QSqlQuery>
+#include "mysqlite_db.h"
 
 namespace Ui {
 class signIn_Dialog;
@@ -24,6 +26,8 @@ private slots:
 private:
     Ui::signIn_Dialog *ui;
     student_profile_Dialog *pro;
+    QSqlQuery q;
+    MySqlite_db* db_;
 };
 
 #endif // SIGNIN_DIALOG_H

@@ -17,6 +17,7 @@ class Admin_Dialog : public QDialog
 public:
     explicit Admin_Dialog( QWidget *parent = nullptr);
     ~Admin_Dialog();
+    bool get_box() const;
 
 private slots:
     void on_checkBox_new_admin_clicked();
@@ -31,6 +32,7 @@ private:
     registration_Dialog* reg;
     Admin_Profile_Dialog* admin_profile;
     QString pw;
+
 
 };
 

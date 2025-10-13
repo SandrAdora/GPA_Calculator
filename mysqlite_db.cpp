@@ -4,39 +4,34 @@
 #include <QDebug>
 #include <filesystem>
 
-#define DB_FILEPATH "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/"
 
+// --- Singleton
 MySqlite_db* MySqlite_db::instance = nullptr;
 
-MySqlite_db* MySqlite_db::get_instance() {
-    if (instance == nullptr) {
-        instance = new MySqlite_db();
-    }
-    return instance;
-}
 
+
+
+// -- Establish database connection
 MySqlite_db::MySqlite_db() {
-    this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
-    this->default_db_name = "db_gpa";
 
-    this->db_connection.setDatabaseName(DB_FILEPATH + default_db_name + ".db");
-
-    // check if file exists
-    if(QFile::exists(DB_FILEPATH + this->default_db_name + ".db")){
-
-        qDebug() << "File exists, check connection to the database";
-        if (!db_connection.open()) {
-            QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
-            return;
-        }
+    // --- check if file exists
+    if(QFile::exists(this->database_path + this->default_db_name + ".db")){
+        qDebug() << "File exists, stabilizing connection to the database";
+        this->connect();
 
     }else{
         QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
         return;
     }
-    QSqlQuery query;
-    query = QSqlQuery(db_connection);
+}
 
+// --- This instance communicates with the business layer
+MySqlite_db *MySqlite_db::get_instance()
+{
+    if(this->instance == nullptr)
+        this->instance = new MySqlite_db();
+
+    return this->instance;
 }
 
 MySqlite_db::~MySqlite_db() {
@@ -45,93 +40,137 @@ MySqlite_db::~MySqlite_db() {
     instance = nullptr;
 }
 
-bool MySqlite_db::connect() {
-    if (!this->db_connection.open()) {
-        return false ;
+
+// --- This fuction connect the datatabse with the presistance layer
+void MySqlite_db::connect() {
+    qDebug() << "Connecting....";
+    this->db_connection = QSqlDatabase::addDatabase(this->default_db_driver);
+    this->db_connection.setDatabaseName(this->database_path + default_db_name + ".db");
+    qDebug() << "Connection name:" <<this->db_connection.connectionName()
+             << "Driver name: " << this->db_connection.driverName();
+    if(this->db_connection.open())
+        qDebug() << "Database is open: ";
+    else
+    {
+        qDebug() << "Database is still closed. Error message: " << this->db_connection.lastError().text();
     }
-    return true;
+
+}
+// -- Checks status of database
+
+bool MySqlite_db::status()
+{
+    if(this->db_connection.isValid() || db_connection.isOpen())
+        return true;
+    QMessageBox::warning(nullptr, "Database Status", "no Connection established");
+    qDebug() << "Error: " << db_connection.lastError();
+    return false;
+
+
 }
 
+// --- Disconnection
 void MySqlite_db::disconnect() {
     if (this->db_connection.open()) {
         this->db_connection.close();
     }
 }
 
+
+
+/// ----------------------------------- GPA Student functionality ---------------------
+///
+/// -- insert students
 int MySqlite_db::insert_student( QString& course,  QString& fullname,  QDate& birthdate,
                                  QString& gender, QString& email,  QString& password, QString& gpa) {
-
-    static int id = -1;
-
-
     // check if file exists
-    if(QFile::exists(DATABASE)){
-
-        qDebug() << "File exists, check connection to the database";
-        if (!db_connection.open()) {
-            QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
-            qDebug() << "Error: " << db_connection.lastError();
-            return -1;
-        }
-
-    }else{
-        QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
+    if(!this->status()){
+        QMessageBox::warning(nullptr, "Database Status:", "Error message: Database does not exist or couldn't be found") ;
         return -1;
     }
-    QSqlQuery query;
-    query = QSqlQuery(this->db_connection);
+    static int id = -1;
+    QSqlDatabase db_conection = QSqlDatabase::addDatabase("SQLITE");
+    db_conection.setDatabaseName("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db");
+
+    QSqlQuery query(db_connection);
     QString b_date = birthdate.toString();
-    query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + course + "','" + fullname + "','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + gpa+ "' )");
-
-    query.prepare("select last_insert_rowid()");
-    if(query.exec())
+    query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa )"
+                  "VALUES('" + course + "','" + fullname +"','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + gpa + "' )");
+    if(!query.exec())
     {
-        query.next();
-        id = query.value(0).toInt();
-
-    }else {
         qDebug() << "Adding student - return id error: " << query.lastQuery();
         qDebug() << "Error: " << query.lastError().text();
     }
-
+    while(query.next())
+        id = query.value(0).toInt(); /// return the id of the student
     return id;
 }
 
+
+/// ---- Insert subjects -------
 int MySqlite_db::insert_subject(int& student_id,  QString& subject_name, int& weights, float& ects) {
-    if (!connect()) return -1;
-    static int id = -1;
+    if (!status()) return -1;
 
-    QSqlQuery query;
-    query.prepare("INSERT INTO subjects (subject_id, student_id, subject_name, weights, ects) "
-                  "VALUES (null,:student_id,:subject_name,:weights,:ects)");
-    query.bindValue(":student_id", student_id);
-    query.bindValue(":subject_name", subject_name);
-    query.bindValue(":weights", weights);
-    query.bindValue(":ects", ects);
 
-    if(query.exec())
-    {
-        query.prepare("select last_insert_rowid()");
-        id = query.value(0).toInt();
+    this->db_connection = QSqlDatabase::addDatabase(this->default_db_driver);
+    this->db_connection.setDatabaseName(DB_FILEPATH);
 
-    }else
+
+    QSqlQuery query(this->db_connection);
+
+    query.prepare(" INSERT INTO subjects( student_id,subject_name, subject_weights, subject_ects) VALUES( '" + QString::number(student_id) + "','" + subject_name +"','" + QString::number(weights) + "','" + QString::number(ects) + "')");
+
+
+    if(!query.exec())
     {
         qDebug() << "Add Subject Id error: " << query.lastError();
         qDebug() << "Last query before error occured: " << query.lastQuery();
+
+    }
+    return 1;
+}
+
+
+/// Get specific student
+/// @arg: ID as an int var
+/// @returns query of requested student
+
+QSqlQuery MySqlite_db::get_student(int &id)
+{
+    if(id < 1)
+        QMessageBox::warning(nullptr, "ID Status", "Invalid id...try again");
+
+
+    if(!QFile::exists(DB_FILEPATH)) return QSqlQuery();
+
+    this->db_connection = QSqlDatabase::addDatabase(this->default_db_driver);
+    db_connection.setDatabaseName(DB_FILEPATH);
+
+    QSqlQuery q(db_connection);
+    q.prepare("DELETE course, fullname, birthdate, gender, email, password WHERE :id=id");
+    q.bindValue(":id",id);
+    if(!q.exec())
+    {
+        QMessageBox::warning(nullptr, "Delete status", "Student could not be deleted..");
+        qDebug() << "Error deleting student: " << q.lastError().text() << "Last Query was:"  << q.lastQuery();
     }
 
 
-    return id;
+    return q;
 }
 
 QSqlQuery MySqlite_db::get_student_login(const QString email, const QString password)
 {
-    QSqlQuery query;
+    if(!this->status())
+        QMessageBox::warning(nullptr, "Database Status",  "db_connection Error()");
+    this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
+    this->db_connection.setDatabaseName(DB_FILEPATH);
+    QSqlQuery query(this->db_connection);
+
     query.prepare(
-        "SELECT student_id, fullname, birthdate, gender, course, email, password, gpa"
-        "FROM student where email=:email and password=:password");
-    query.bindValue(":email", email);
-    query.bindValue(":password", password);
+        "SELECT ID, course, fullname, birthdate, gender, email, password, currentGpa"
+        "FROM students Where email=:email and password=:password VALUES('" + email + "'," + password + "')");
+
     if(!query.exec())
     {
         qDebug() <<"Get student login details error:" << query.lastError();
@@ -144,25 +183,24 @@ QSqlQuery MySqlite_db::get_student_login(const QString email, const QString pass
 
 query MySqlite_db::get_students()
 {
-    if (!connect())
+    if (!status())
     {
         QMessageBox::warning(nullptr, "Database connection", "Failure..");
         return QSqlQuery();
 
     }
-    QSqlQuery q;
+    QSqlQuery q =  QSqlQuery(this->db_connection);
+    q.prepare("SELECT * FROM students");
+    q.exec();
 
-    if(!q.exec("Select * from students Order By (fullname)")){
 
-        QMessageBox::warning(nullptr, "Query", "Last query error");
-        qDebug() << q.lastError();
-    }
+
     return q;
 }
 
 query MySqlite_db::get_student_info(int &id, str &choice)
 {
-    if(!connect())
+    if(!status())
     {
         QMessageBox::warning(nullptr, "Student infos", "fail");
         return QSqlQuery(); // returning an empty query
@@ -212,6 +250,21 @@ auto MySqlite_db::toFilesystemPath(QString& txt)
     return fs_path;
 }
 
+bool MySqlite_db::email_exists(QString &em, QString& table)
+{
+
+
+    this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
+    this->db_connection.setDatabaseName(DB_FILEPATH);
+    QSqlQuery q(this->db_connection);
+    q.prepare("SELECT email FROM '" + table +"' WHERE :email=em");
+    q.bindValue(":email", em);
+    if(q.exec())
+        return true;
+    return false;
+
+}
+
 // search path
 auto search_path(const fs::path& p) {
     if ( fs::exists(p))
@@ -219,18 +272,6 @@ auto search_path(const fs::path& p) {
 
     else
             return false;
-}
-// set database path
-void MySqlite_db::set_db_path(QString& path)
-{
-    // check if path already exists
-    if(this->database_path == path)
-    {
-        qDebug() << "Path exists already";
-        return;
-    }
-    fs::path p = toFilesystemPath(path);
-    this->database_path = filesystemToQstringPath(p);
 }
 
 // get db default name
@@ -247,15 +288,17 @@ QString MySqlite_db::get_database_path() const
 
 }
 int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QString& gender,  QString& email,  QString& password) {
-    if (!connect())
+    if (!status())
         return -1;
     static int id = -1;
 
 
-    QSqlQuery query;
+    this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
+    this->db_connection.setDatabaseName(DB_FILEPATH);
+    QSqlQuery query(this->db_connection);
     QString gdate = birthdate.toString("dd.mm.yyyy");
-    query.prepare("INSERT INTO admin (admin_id,fullname, birthdate, gender, email, password) "
-                  "VALUES (null,:fullname, :birthdate, :gender, :email, :password)");
+    query.prepare("INSERT INTO admins (fullname, birthdate, gender, email, password) "
+                  "VALUES (:fullname, :birthdate, :gender, :email, :password)");
     query.bindValue(":fullname", fullname);
     query.bindValue(":birthdate", gdate);
     query.bindValue(":gender", gender);
@@ -280,9 +323,12 @@ int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QStrin
 }
 
 bool MySqlite_db::check_if_table_exist( QString& table_name) {
-    if (!connect()) return false;
+    if (!status()) return false;
+    this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
+    this->db_connection.setDatabaseName(DB_FILEPATH);
 
-    QSqlQuery query("SELECT name FROM sqlite_master WHERE type='table' AND name=:table_name");
+    QSqlQuery query(this->db_connection);
+        query.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=:table_name");
     query.bindValue(":table_name", table_name);
     if (query.exec() && query.next()) {
         return true;

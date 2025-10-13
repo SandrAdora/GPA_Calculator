@@ -99,6 +99,10 @@ QString Student::get_course_str() const
     return "";
 
 }
+
+/// -- Course converter
+/// @ string --> course
+/// @return --> type of Courses (int)
 Courses Student::get_course_cour(QString& major) const
 {
     if(major == "Architect")

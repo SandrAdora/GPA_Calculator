@@ -63,7 +63,7 @@ public:
     std::vector<Student*> get_student(const QString, const QString); // get a specific student
     std::vector<Student*> view_all_student() const; // returns a list of all students
     void view_all_subjects() const;
-    bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
+    bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
     bool delete_student(int &); // id of student to be deleted
     bool update_student_name(int&, QString); // id of student and what operation should be done
 
@@ -86,7 +86,7 @@ public:
     bool delete_admin(int&);
 
 
-    bool check_email(QString&);
+    bool check_email(QString&, QString);
 
 
 

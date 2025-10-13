@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>571</width>
-    <height>422</height>
+    <width>703</width>
+    <height>542</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>40</y>
-     <width>341</width>
-     <height>321</height>
+     <x>290</x>
+     <y>80</y>
+     <width>361</width>
+     <height>341</height>
     </rect>
    </property>
    <widget class="QComboBox" name="comboBox_courses">
@@ -166,40 +166,30 @@
      </rect>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_reg_as_admin">
+   <widget class="QPushButton" name="pushButton_signUp">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>40</x>
       <y>290</y>
-      <width>161</width>
-      <height>25</height>
+      <width>93</width>
+      <height>29</height>
      </rect>
     </property>
     <property name="text">
-     <string>Register as Administrator</string>
+     <string>signUp</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QPushButton" name="pushButton_cancel">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>260</y>
-      <width>63</width>
-      <height>20</height>
+      <x>180</x>
+      <y>290</y>
+      <width>93</width>
+      <height>29</height>
      </rect>
     </property>
     <property name="text">
-     <string>curr. GPA</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_current_gpa">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>260</y>
-      <width>71</width>
-      <height>28</height>
-     </rect>
+     <string>reset</string>
     </property>
    </widget>
   </widget>
@@ -208,8 +198,8 @@
     <rect>
      <x>30</x>
      <y>10</y>
-     <width>171</width>
-     <height>41</height>
+     <width>301</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="font">
@@ -223,39 +213,13 @@
     <string>Registration</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_signUp">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>380</y>
-     <width>93</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>signUp</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_cancel">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>380</y>
-     <width>93</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>reset</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_registration_2">
    <property name="geometry">
     <rect>
      <x>50</x>
      <y>150</y>
-     <width>151</width>
-     <height>121</height>
+     <width>181</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -263,6 +227,19 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_reg_as_admin">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>340</y>
+     <width>161</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Register as Administrator</string>
    </property>
   </widget>
  </widget>

@@ -4,7 +4,7 @@
 #include "ui_registration_dialog.h"
 #include "signin_dialog.h"
 #include "administration.h"
-#include "mysqlite_db.h"
+
 
 #include <QDialog>
 
@@ -17,7 +17,7 @@ class registration_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit registration_Dialog(QWidget *parent = nullptr);
+    explicit registration_Dialog( QWidget *parent = nullptr );
     ~registration_Dialog();
 
 private slots:
@@ -30,6 +30,7 @@ private slots:
 private:
     Ui::registration_Dialog *ui;
     signIn_Dialog *signIn;
+
 
 
     Administration* admnistration;
@@ -45,7 +46,7 @@ private:
     void getGenders();
     void populateComboGender();
 
-    MySqlite_db* db;
+
 
 
 };

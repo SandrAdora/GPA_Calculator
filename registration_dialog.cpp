@@ -6,15 +6,19 @@
 #include <QMessageBox>
 #include "mysqlite_db.h"
 
-registration_Dialog::registration_Dialog(QWidget *parent)
+registration_Dialog::registration_Dialog( QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::registration_Dialog)
+
 {
     ui->setupUi(this);
     ui->widget->setEnabled(true);
     ui->comboBox_courses->setEditable(true);
     ui->comboBox_gender->setEditable(true);
-    ui->checkBox_reg_as_admin->setEnabled(true);
+    if(ui->comboBox_courses->currentText() == "Administration")
+        ui->checkBox_reg_as_admin->setEnabled(false);
+    else
+        ui->checkBox_reg_as_admin->setEnabled(true);
     populateComboCourses();
     populateComboGender();
 }
@@ -80,60 +84,59 @@ void registration_Dialog::on_pushButton_signUp_clicked()
     QString gender = ui->comboBox_gender->currentText();
     QString email = ui->lineEdit_email->text();
     QString password = ui->lineEdit_password->text();
-    QString curr_gpa = ui->lineEdit_current_gpa->text();
+    QString curr_gpa = "";
+
+    // ---- Database connection
+    QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE");
+    db_connection.setDatabaseName("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db");
+
+    // check if file exists
+    if(QFile::exists("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db")){
+
+        qDebug() << "File exists, check connection to the database";
+        if (!db_connection.open()) {
+            QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
+            qDebug() << "Error: " << db_connection.lastError();
+            return;
+        } else {
+            qDebug() << "Connection established";
+        }
+    }else{
+        QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
+        return;
+    }
+    QSqlQuery query;
+    query = QSqlQuery(db_connection);
+
+    QString b_date = birthdate.toString();
 
     this->hide();
+
     if(major == "Administrator")
     {
-        // add infos to adimistration class
+        query.prepare("INSERT INTO admins(fullname,birthdate, gender, email, password ) VALUES('" + fullname + "','" + b_date + "','" + gender + "','" + email + "','" + password + "' )");
 
-        if(this->admnistration->register_admin( fullname, birthdate, gender, email, password))
+        if(query.exec())
         {
-
-            Admin_Dialog* adminSignIn = new Admin_Dialog();
+            Admin_Dialog* adminSignIn = new Admin_Dialog(this);
             adminSignIn->show();
         }else  {
-            qDebug() << "Error: Creating a new Admin";
+            qDebug() << "Error: Creating a new Admin" << query.lastError().text() << query.lastQuery();
         }
     }
     else
     {
-        Student* obj = new Student();
-        // pass all infos to administration before  opening a new dialog
-        // normally an obj isnt needed, but in this case it is needed in order to convert the courses to string
-        Courses cor = obj->get_course_cour(major);
-        QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE");
-        db_connection.setDatabaseName(DATABASE);
-
-        // check if file exists
-        if(QFile::exists(DATABASE)){
-
-            qDebug() << "File exists, check connection to the database";
-            if (!db_connection.open()) {
-                QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
-                qDebug() << "Error: " << db_connection.lastError();
-                return;
-            }
-
-        }else{
-            QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
-            return;
-        }
-        QSqlQuery query;
-        query = QSqlQuery(db_connection);
-        QString b_date = birthdate.toString();
-        query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + major + "','" + fullname + "','" + b_date +"','" + email + "','" + password + "','" + gender + "', '" + curr_gpa+ "' )");
-
-        if( query.exec())
+        // --- Insert statement Sign-In
+        query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + major + "','" + fullname + "','" + b_date +"','" + gender +"','" + email + "','"  + password +  "', '" + curr_gpa+ "' )");
+        if(query.exec())
         {
             signIn = new signIn_Dialog(this);
             signIn->show();
         }else {
             qDebug() << "Error: Creating a new Student " << query.lastError().text()   << " last query: " << query.lastQuery();
         }
-
-        db_connection.close();
     }
+    db_connection.close();
 }
 
 

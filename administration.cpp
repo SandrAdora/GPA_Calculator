@@ -6,6 +6,7 @@
 using dbug = QDebug;
 Administration* Administration::_instance = nullptr;
 Administration::Administration() {
+    this->db->get_instance();
     ptr = nullptr;
 
 
@@ -74,12 +75,12 @@ bool Administration::register_admin(QString &fullname, QDate &d, QString &g, QSt
         gender = (int)Gender::MALE;
     else if ( g == "female" || g == "Feamale")
         gender = (int)Gender::FEAMALE;
-    else if(g =="..." )
+    else if(g =="other" )
         gender = (int)Gender::NOTHING;
     else {
         gender = (int)Gender::NO_USER_INPUT;
     }
-    admins.push_back(move(aptr)); // pushing student into the list
+    admins.push_back(std::move(aptr)); // pushing student into the list
     ptr.reset();
 
     int id = this->db->get_instance()->insert_new_admin(fullname, d, g, e, pw);
@@ -98,17 +99,23 @@ bool Administration::register_admin(QString &fullname, QDate &d, QString &g, QSt
 bool Administration::delete_subject(int id){}
 void Administration::view_all_subjects() const{}
 
-bool Administration::register_student(Courses& course, QString &name, QDate &geb, QString&gen, QString& gpa, QString& em, QString& ps)
+/// Comments to funtcion: Register student
+/// @arg: course, fullname, birthdate, gender email and password
+/// @returns: bool true or false according to the registration being successful or not
+bool Administration::register_student(Courses& course, QString &name, QDate &geb, QString&gen, QString& em, QString& ps)
 {
+
     if(ptr == nullptr){
         this->type = MethodType::student;
         ptr = this->create_object(type);
     }
     // check if email already exists
+    QString table = "students";
 
-    if( this->check_email(em))
+    if( this->db->get_instance()->email_exists(em, table ));
     {
         qDebug() << "Email already exists. Please register with a new email address";
+        QMessageBox::warning(nullptr, " Register Student", "Failed....email exists");
         return false;
     }
 
@@ -123,8 +130,11 @@ bool Administration::register_student(Courses& course, QString &name, QDate &geb
 
     students.push_back(move(sptr)); // adds a new student to the vector using the same singleton pointer
     // since downcast ptr now belongst to sptr must be reseted in order to be used again
-
-    int id =  db->get_instance()->insert_student(student_course, name, geb, gen, em, ps, gpa);
+    double curr_gpa = 1.0;
+    QString curr_gpa_str = QString::number(curr_gpa);
+    sptr->set_gpa(curr_gpa_str);
+    MySqlite_db* db = new MySqlite_db();
+    int id =  db->get_instance()->insert_student(student_course, name, geb, gen, curr_gpa_str, em, ps);
 
     if(id < 0)
     {
@@ -136,97 +146,30 @@ bool Administration::register_student(Courses& course, QString &name, QDate &geb
 }
 bool Administration::delete_student(int &id){
 
-    QSqlQuery q;
-    q.prepare("select student_id, fullname, course, gender, gpa, email, password, birtdate FROM students WHERE student_id=:id ");
-    q.bindValue(":id", id);
-    if(q.exec())
-    {
-        QMessageBox::information(nullptr, "Delete Student Status", "Success");
-        return true;
-    }
-    else {
-        qDebug() << "Delete Status failed:" << q.lastError();
-    }
 
-    return false;
 }
 
 
 bool Administration::update_student_name(int& id, QString new_name){
 
-    QSqlQuery q;
-    q.prepare("UPDATE students SET fullname = :fullname WHERE student_id=:id");
-    q.bindValue(":id", id);
-    q.bindValue(":fullname",new_name);
-    if(q.exec())
-    {
-        qDebug() << "Update student fullname success.";
-        qDebug() << "updated to " << new_name;
 
-    }else{
-        qDebug() << "Error: Updating fullname fail:" << q.lastError();
-        return false;
-    }
-    return true;
 
 }
 
 bool Administration::update_subject_ect(int& id, double& ects){
-    QSqlQuery q;
-    q.prepare("UPDATE subjects SET ects=:ects WHERE subject_id=:id");
-    q.bindValue(":id", id);
-    q.bindValue(":sub_name",ects);
-    if(q.exec())
-    {
-        qDebug() << "Update subject etcs success.";
-        qDebug() << "updated to " << ects;
 
-    }else{
-        qDebug() << "Error: Updating subject ects fail:" << q.lastError();
-        return false;
-    }
-    return true;
 }
 bool Administration::update_subject_name(int& id, QString& new_name){
-    QSqlQuery q;
-    q.prepare("UPDATE subjects SET subject_name=:sub_name WHERE subject_id=:id");
-    q.bindValue(":id", id);
-    q.bindValue(":sub_name",new_name);
-    if(q.exec())
-    {
-        qDebug() << "Update subject name success.";
-        qDebug() << "updated to " << new_name;
 
-    }else{
-        qDebug() << "Error: Updating subject name fail:" << q.lastError();
-        return false;
-    }
-    return true;
 }
 bool Administration::update_subject_weights(int& id ,double new_weights){
 
-    QSqlQuery q;
-    q.prepare("UPDATE subjects SET subject_weights=sub_weights WHERE subject_id=:id");
-    q.bindValue(":id", id);
-    q.bindValue(":sub_weights",new_weights);
-    if(q.exec())
-    {
-        qDebug() << "Update subject weights success.";
-        qDebug() << "updated to " << new_weights;
 
-    }else{
-        qDebug() << "Error: Updating subject weights fail:" << q.lastError();
-        return false;
-    }
-    return true;
 }
 
-bool Administration::check_email(QString &email)
+bool Administration::check_email(QString &email, QString table)
 {
-    QSqlQuery ql;
-    ql.prepare("select email from students where email=:email");
-    ql.bindValue(":email", email);
-    if(ql.exec())
+    if(this->db->get_instance()->email_exists(email, table))
         return true;
     return false;
 }
@@ -238,7 +181,7 @@ std::vector<Student*> Administration::_sql(QSqlQuery ql)
 
     while(ql.next())
     {
-        int id = (ql.value("student_id")).toInt();
+        int id = (ql.value("ID")).toInt();
         student_instance = new Student();
 
         student_instance->set_fullname(ql.value("fullname").toString());

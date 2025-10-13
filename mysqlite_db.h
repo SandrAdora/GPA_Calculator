@@ -1,7 +1,8 @@
 #ifndef MYSQLITE_DB_H
 #define MYSQLITE_DB_H
 
-#define DATABASE "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db"
+
+#define DB_FILEPATH "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db"
 #include <QString>
 #include <QSqlQuery>
 #include <QSqlDatabase>
@@ -35,10 +36,14 @@ class MySqlite_db
 public:
 
 
-     MySqlite_db* get_instance();  // instance Method
+
     ~MySqlite_db();
      MySqlite_db(QString&, QString = ""); // constructor with names for creating new database or inserting into existing one in another table
      MySqlite_db(); // default constructor
+
+
+     // --- Selecton
+     MySqlite_db* get_instance();
 
      // dynamic Method to create the database table
     string build_create_table_sql(const vector<string>&);
@@ -49,7 +54,8 @@ public:
 
     // Build Connection to existing database
     void disconnect();
-    bool connect();
+    void connect();
+    bool status();
 
     // Operations
     int insert_student( QString& ,QString&, QDate&, QString&, QString&, QString&, QString&); // fullname, date, gender, email and password...--> if more args needed
@@ -95,15 +101,17 @@ public:
 
      // helper functions
      auto toFilesystemPath(QString& );
+     bool email_exists(QString& em, QString& table);
 
 
 
 private:
     static MySqlite_db* instance; // singleton, instance
     Db db_connection; // database connection
-    QString default_db; // available database driver default is sqlite
-    QString default_db_name; // name of the database table
-    QString database_path;
+    QString default_db_driver = "QSQLITE"; // available database driver default is sqlite
+    QString default_db_name = "db_gpa"; // name of the database table
+    QString database_path = DB_FILEPATH;
+
 };
 
 #endif // MYSQLITE_DB_H

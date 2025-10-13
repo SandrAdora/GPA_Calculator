@@ -24,7 +24,7 @@ void Dialog_view_tables::on_pushButton_load_table_clicked()
 {
     QString table_name  = ui->lineEdit_name_of_table_to_load->text(); // table user inputs
     MySqlite_db* db; // database for setting up connection
-    bool ok = db->get_instance()->connect();
+    bool ok = db->status();
     QSqlQuery* qry;
     QSqlQueryModel* modal = new QSqlQueryModel();
     if(!ok){ // check database status

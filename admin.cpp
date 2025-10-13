@@ -31,7 +31,7 @@ Admin::Admin(QString &fullname, QDate &d, QString &g, QString &e)
         gen = Gender::MALE;
     else if(g == "female" || g == "Female")
         gen = Gender::FEAMALE;
-    else if(g == "...")
+    else if(g == "other")
 
         gen = Gender::NOTHING;
 
