@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>80</y>
+     <y>90</y>
      <width>361</width>
-     <height>341</height>
+     <height>391</height>
     </rect>
    </property>
    <widget class="QComboBox" name="comboBox_courses">
@@ -169,8 +169,8 @@
    <widget class="QPushButton" name="pushButton_signUp">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>290</y>
+      <x>30</x>
+      <y>340</y>
       <width>93</width>
       <height>29</height>
      </rect>
@@ -182,14 +182,37 @@
    <widget class="QPushButton" name="pushButton_cancel">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>290</y>
+      <x>170</x>
+      <y>340</y>
       <width>93</width>
       <height>29</height>
      </rect>
     </property>
     <property name="text">
      <string>reset</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>280</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>GPA</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_gpa">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>270</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
     </property>
    </widget>
   </widget>

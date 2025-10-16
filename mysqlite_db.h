@@ -110,7 +110,7 @@ private:
     Db db_connection; // database connection
     QString default_db_driver = "QSQLITE"; // available database driver default is sqlite
     QString default_db_name = "db_gpa"; // name of the database table
-    QString database_path = DB_FILEPATH;
+    QString database_path = "C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db";
 
 };
 

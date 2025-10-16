@@ -1,4 +1,4 @@
-#include "create_new_database_dialog.h"
+ #include "create_new_database_dialog.h"
 #include "ui_create_new_database_dialog.h"
 #include <QMenu>
 #include <QVBoxLayout>

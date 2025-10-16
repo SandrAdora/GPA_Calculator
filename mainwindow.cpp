@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     //QPixmap pix("/res/documentation/GPA-Calculator-2.png");
     //ui->label->setPixmap(pix.scaled(300, 500, Qt::KeepAspectRatio));
     qDebug()<<QSqlDatabase::drivers();
+    setWindowTitle("Student GPA Calculator");
 
 }
 
@@ -98,7 +99,7 @@ void MainWindow::on_actionsignIn_triggered()
 void MainWindow::on_actionregistration_triggered()
 {
     hide();
-    reg = new registration_Dialog(this);
+    reg = new registration_Dialog();
     reg->show();
 }
 

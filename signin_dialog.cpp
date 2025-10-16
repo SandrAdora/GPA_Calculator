@@ -23,7 +23,7 @@ void signIn_Dialog::on_pushButton_clicked()
     QString password = ui->lineEdit_password->text();
 
     // -- Fetch data from the database
-    QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE", "signIn_connection");
     db_connection.setDatabaseName("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db");
     QSqlQuery query(db_connection);
 

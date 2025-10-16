@@ -2,9 +2,12 @@
 #include "ui_admin_dialog.h"
 #include <QDebug>
 #include <QMessageBox>
-Admin_Dialog::Admin_Dialog( QWidget *parent)
+#include "registration_dialog.h"
+Admin_Dialog::Admin_Dialog( Person* p, Administration* a,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Admin_Dialog)
+    ,person(p)
+    , admin(a)
 
 {
     ui->setupUi(this);
@@ -15,17 +18,6 @@ Admin_Dialog::Admin_Dialog( QWidget *parent)
 Admin_Dialog::~Admin_Dialog()
 {
     delete ui;
-    if(this->reg != nullptr)
-    {
-        delete this->reg;
-        this->reg = nullptr;
-
-    }
-    if(this->admin != nullptr)
-    {
-        delete this->admin;
-        this->admin = nullptr;
-    }
 
 
 
@@ -43,8 +35,9 @@ bool Admin_Dialog::get_box() const
 void Admin_Dialog::on_checkBox_new_admin_clicked()
 {
     hide();
-    reg = new registration_Dialog();
+    registration_Dialog* reg = new registration_Dialog();
     reg->show();
+
 }
 
 
@@ -53,21 +46,6 @@ void Admin_Dialog::on_checkBox_new_admin_clicked()
 void Admin_Dialog::on_pushButton_admin_ok_clicked()
 {
     // open admin profile
-    this->pw = ui->lineEdit_admin->text();
-    this->admin = new Admin();
-    QString ad_password = this->admin->get_it_admin_password();
-
-    if(pw == ad_password)
-    {
-        hide();
-        admin_profile = new Admin_Profile_Dialog(this);
-        admin_profile->show();
-
-    }else{
-        QMessageBox::warning(nullptr, "Password failiure", "Wrong password...");
-        ui->lineEdit_admin->setText("");
-    }
-
 
 
 }

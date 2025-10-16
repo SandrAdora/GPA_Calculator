@@ -1,24 +1,24 @@
 #include "registration_dialog.h"
 #include "ui_registration_dialog.h"
 #include "signin_dialog.h"
-#include "administration.h"
-#include "admin_dialog.h"
-#include <QMessageBox>
-#include "mysqlite_db.h"
 
-registration_Dialog::registration_Dialog( QWidget *parent)
+#include <QMessageBox>
+
+
+registration_Dialog::registration_Dialog(Person*p, Administration* admin, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::registration_Dialog)
+    , person(p)
+    , admnistration(admin)
 
 {
+
     ui->setupUi(this);
+    this->admnistration = new Administration();
+    setWindowTitle("Registration");
     ui->widget->setEnabled(true);
     ui->comboBox_courses->setEditable(true);
     ui->comboBox_gender->setEditable(true);
-    if(ui->comboBox_courses->currentText() == "Administration")
-        ui->checkBox_reg_as_admin->setEnabled(false);
-    else
-        ui->checkBox_reg_as_admin->setEnabled(true);
     populateComboCourses();
     populateComboGender();
 }
@@ -26,6 +26,11 @@ registration_Dialog::registration_Dialog( QWidget *parent)
 registration_Dialog::~registration_Dialog()
 {
     delete ui;
+    for(auto student : students)
+        delete student;
+    students.clear();
+    delete this->admnistration;
+
 }
 
 // Populating Comboboxes
@@ -84,59 +89,39 @@ void registration_Dialog::on_pushButton_signUp_clicked()
     QString gender = ui->comboBox_gender->currentText();
     QString email = ui->lineEdit_email->text();
     QString password = ui->lineEdit_password->text();
-    QString curr_gpa = "";
+    QString curr_gpa = ui->lineEdit_gpa->text();;
 
-    // ---- Database connection
-    QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE");
-    db_connection.setDatabaseName("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db");
-
-    // check if file exists
-    if(QFile::exists("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db")){
-
-        qDebug() << "File exists, check connection to the database";
-        if (!db_connection.open()) {
-            QMessageBox::critical(nullptr, "Database Connection", db_connection.lastError().text());
-            qDebug() << "Error: " << db_connection.lastError();
-            return;
-        } else {
-            qDebug() << "Connection established";
-        }
-    }else{
-        QMessageBox::warning(nullptr, "File Status:", "Error message: File does not exist") ;
-        return;
-    }
-    QSqlQuery query;
-    query = QSqlQuery(db_connection);
-
-    QString b_date = birthdate.toString();
-
+    bool success = false;
     this->hide();
 
     if(major == "Administrator")
     {
-        query.prepare("INSERT INTO admins(fullname,birthdate, gender, email, password ) VALUES('" + fullname + "','" + b_date + "','" + gender + "','" + email + "','" + password + "' )");
-
-        if(query.exec())
+        success=this->admnistration->register_admin(fullname,birthdate,gender,email,password);
+        if(success)
         {
-            Admin_Dialog* adminSignIn = new Admin_Dialog(this);
-            adminSignIn->show();
-        }else  {
-            qDebug() << "Error: Creating a new Admin" << query.lastError().text() << query.lastQuery();
+
+        Admin_Dialog* adminSignIn= new Admin_Dialog();
+        adminSignIn->show();
+        }
+        else{
+            QMessageBox::warning(this, "Admin Registration status", "failed");
+            return;
         }
     }
     else
     {
-        // --- Insert statement Sign-In
-        query.prepare("INSERT INTO students(course,fullname, birthdate, gender, email, password, currentGpa ) VALUES('" + major + "','" + fullname + "','" + b_date +"','" + gender +"','" + email + "','"  + password +  "', '" + curr_gpa+ "' )");
-        if(query.exec())
-        {
-            signIn = new signIn_Dialog(this);
+        Student obj;
+        Courses course = obj.get_course_cour(major);
+        success=this->admnistration->register_student(course, fullname, birthdate, gender, email, password, curr_gpa);
+        if(success){
+            signIn_Dialog *signIn = new signIn_Dialog(this);
             signIn->show();
-        }else {
-            qDebug() << "Error: Creating a new Student " << query.lastError().text()   << " last query: " << query.lastQuery();
+        }else{
+            QMessageBox::warning(this,"Student Registration Status", "Failed");
+            return;
         }
     }
-    db_connection.close();
+
 }
 
 

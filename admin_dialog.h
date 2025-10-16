@@ -3,8 +3,9 @@
 
 #include <QDialog>
 #include "admin.h"
-#include "registration_dialog.h"
+
 #include "admin_profile_dialog.h"
+#include "administration.h"
 
 namespace Ui {
 class Admin_Dialog;
@@ -15,7 +16,7 @@ class Admin_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Admin_Dialog( QWidget *parent = nullptr);
+    explicit Admin_Dialog( Person* = nullptr, Administration* = nullptr, QWidget *parent = nullptr);
     ~Admin_Dialog();
     bool get_box() const;
 
@@ -28,8 +29,10 @@ private slots:
 
 private:
     Ui::Admin_Dialog *ui;
-    Admin* admin;
-    registration_Dialog* reg;
+
+    Person* person;
+    Administration *admin;
+
     Admin_Profile_Dialog* admin_profile;
     QString pw;
 

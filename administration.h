@@ -63,7 +63,7 @@ public:
     std::vector<Student*> get_student(const QString, const QString); // get a specific student
     std::vector<Student*> view_all_student() const; // returns a list of all students
     void view_all_subjects() const;
-    bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
+    bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
     bool delete_student(int &); // id of student to be deleted
     bool update_student_name(int&, QString); // id of student and what operation should be done
 
@@ -91,23 +91,15 @@ public:
 
 
     // for each view and get obj an aquivalent qsql statement is needed
-    std::vector<Student*>_sql(QSqlQuery);
-    std::vector<Admin*>A_sql(QSqlQuery);
-    std::vector<Subject*>S_sql(QSqlQuery);
+    std::vector<Student*>_sql(QSqlQuery); // student vector
+    std::vector<Admin*>A_sql(QSqlQuery); // admin vector
+    std::vector<Subject*>S_sql(QSqlQuery); // subject vector
 
 
-
-protected:
-    Administration();
 
 private:
-    std::vector<std::unique_ptr<Student>>students;
-    MethodType type;
 
-    std::vector<std::unique_ptr<Admin>> admins;
-    unique_ptr<Person> ptr;
-    Student* student_instance;
-    static Administration* _instance;
+
     MySqlite_db* db;
 
 };

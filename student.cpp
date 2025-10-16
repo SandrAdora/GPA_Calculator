@@ -68,6 +68,11 @@ double Student::get_gpa() const
 {
     return this->gpa;
 }
+
+/// Converts the attibute of a course to string
+/// @Returns:
+///
+/// Course name (string)
 QString Student::get_course_str() const
 {
     if(this->course == Courses::Architect)
@@ -100,9 +105,13 @@ QString Student::get_course_str() const
 
 }
 
-/// -- Course converter
-/// @ string --> course
-/// @return --> type of Courses (int)
+/// --> Course converter
+/// Converts string to the type of Course.
+/// Course is created as an enumeration
+///
+/// Return
+///
+/// --> type of Courses (int)
 Courses Student::get_course_cour(QString& major) const
 {
     if(major == "Architect")
@@ -128,5 +137,11 @@ Courses Student::get_course_cour(QString& major) const
     else if (major == "Business Informatics")
         return Courses::Business_Informatics;
     return Courses::Administrator;
+
+}
+
+Courses Student::get_course() const
+{
+    return this->course;
 
 }

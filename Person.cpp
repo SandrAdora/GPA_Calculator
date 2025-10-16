@@ -39,3 +39,13 @@ Gender Person::convertStringToInt(QString& gen){
     return Gender::NOTHING;
 
 }
+
+int Person::get_personID() const
+{
+    return this->personID;
+}
+
+void Person::set_personId(int &id)
+{
+    this->personID = id;
+}

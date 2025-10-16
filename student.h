@@ -42,6 +42,7 @@ public:
     void set_gpa(QString&);
     QString get_course_str() const;
     Courses get_course_cour(QString& major) const;
+    Courses get_course()const;
     int get_id()const;
     double get_gpa() const;
 
@@ -62,7 +63,7 @@ public:
 
 protected:
     int student_id;
-    int course;
+    Courses course;
     double gpa;
 
 };

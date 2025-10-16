@@ -23,6 +23,8 @@ public:
 
     QString convertToString(Gender gen);
     Gender convertStringToInt(QString& gen);
+    int get_personID() const;
+    void set_personId(int&);
 
 
 
@@ -46,6 +48,7 @@ protected:
     Gender gender;
     QString email;
     QString password;
+    int personID = -1;
 
 };
 #endif // PERSON_H
