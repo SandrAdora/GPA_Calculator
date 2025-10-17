@@ -1,6 +1,6 @@
 # Project introduction
 
-The GPA Calculator Application for Students offers a simple yet powerful solution to help students monitor their academic performance, maintain motivation, and make informed decisions about their studies. By streamlining registration, login, GPA tracking, and account management, this tool empowers students to stay organized and focused throughout their academic journey.
+This Windows-Application is entirely developed in qt creator. This program calculates the GPA of a Student. A Student can sign in to this application and save his/her grades in this application. The Student can add, delete or correct a grade he/she inserted earlier. For the registration only a unique email and a random prefered  password is required. The GPA Calculator Application for Students offers a simple yet powerful solution to help students monitor their academic performance, maintain motivation, and make informed decisions about their studies. By streamlining registration, login, GPA tracking, and account management, this tool empowers students to stay organized and focused throughout their academic journey.
 
 The application is designed around key use cases that reflect real-life student interactions:
 
