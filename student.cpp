@@ -78,30 +78,28 @@ QString Student::get_course_str() const
     if(this->course == Courses::Architect)
         return "Architect";
     else if(this->course == Courses::Artificial_Intelligence)
-        return "Artificial_Intelligence";
+        return "Artificial Intelligence";
     else if(this->course == Courses::Biomedical_Engineering)
         return "Biomedical_Engineering";
     else if(this->course == Courses::Electronical_Engineering)
-        return "Electronical_Engineering";
+        return "Electronical Engineering";
     else if(this->course == Courses::Engineering)
         return "Engineering";
     else if(this->course == Courses::Medical_Engineering)
         return "Medical_Engineering";
     else if(this->course == Courses::Business_Informatics)
-        return "Business_Informatics";
+        return "Business Informatics";
     else if(this->course == Courses::Data_Science)
-        return "Data_Science";
+        return "Data Science";
     else if(this->course == Courses::Human_Medicine)
-        return "Human_Medicine";
+        return "Human Medicine";
     else if(this->course == Courses::Vet_Medicine)
-        return "Vet_Medicine";
+        return "Vet Medicine";
     else if(this->course == Courses::Technical_Informatics)
-        return "Technical_Informatics";
+        return "Technical Informatics";
     else if(this->course == Courses::Mathematics)
         return "Mathematics";
-    else if(this->course == Courses::Administrator)
-        return "Administrator";
-    return "";
+    return " No Input ";
 
 }
 
@@ -136,7 +134,7 @@ Courses Student::get_course_cour(QString& major) const
         return Courses::Mathematics;
     else if (major == "Business Informatics")
         return Courses::Business_Informatics;
-    return Courses::Administrator;
+    return Courses::NO_INPUT;
 
 }
 

@@ -11,12 +11,10 @@
 /// Returns:
 ///
 ///     _sql (vector of Students)
-std::vector<Student *> Administration::get_student(const QString email, const QString password)
+std::vector<Student *> Administration::SignInStudent(const QString& email, const QString& password)
 {
-    QSqlQuery qry = db->get_student_login(email, password);
-    return _sql(qry); // returns query of a student
-
-
+    QSqlQuery qry = db->get_instance()->get_student_login(email, password);
+    return _sql(qry); // returns vectpr list of a student
 }
 
 /// Registers an Administrator
@@ -39,6 +37,15 @@ bool Administration::register_admin(QString &f, QDate &d, QString &g, QString &e
     return true;
 }
 
+std::vector<Admin *> Administration::signInAdmin(const QString email, const QString password)
+{
+
+
+    QSqlQuery q = this->db->get_instance()->signIn_admin(email, password) ;
+    return this->A_sql(q);
+
+}
+
 
 
 
@@ -46,7 +53,10 @@ bool Administration::delete_subject(int id){
 
     return this->db->get_instance()->delete_subject(id);
 }
-void Administration::view_all_subjects() const{}
+void Administration::view_all_subjects() const{
+
+
+}
 
 /// Comments to funtcion: Register student
 /// @arg:
@@ -93,6 +103,7 @@ bool Administration::update_student_name(int& id, QString new_name){
 
 }
 
+
 bool Administration::update_subject_ect(int& id, double& ects){
 
 }
@@ -126,14 +137,38 @@ std::vector<Student*> Administration::_sql(QSqlQuery ql)
         student_instance->set_birthdate(ql.value("birthdate").toDate());
         student_instance->set_gender(ql.value("gender").toString());
         student_instance->set_email(ql.value("email").toString());
-        student_instance->set_password(ql.value("password").toString());
         student_instance->set_course(static_cast<Courses>(ql.value("Course").toInt()));
+        student_instance->set_personId(id);
 
         _lists.push_back(student_instance);
     }
-    delete student_instance;
-    student_instance = nullptr;
+
     return _lists;
+}
+
+std::vector<Admin *> Administration::A_sql(QSqlQuery &q)
+{
+
+    // create a  vector list to save inputs
+    std::vector<Admin*> _list;
+    Admin* admin;
+    while(q.next())
+    {
+        // retrieve id
+        int id=q.value("ID").toInt();
+        admin = new Admin();
+        admin->set_fullname(q.value("fullname").toString());
+        admin->set_birthdate(q.value("birthdate").toDate());
+        admin->set_gender(q.value("gender").toString());
+        admin->set_email(q.value("email").toString());
+        admin->set_personId(id);
+
+        _list.push_back(admin);
+    }
+    delete admin;
+    admin = nullptr;
+    return _list;
+
 }
 
 

@@ -7,12 +7,18 @@
 #include <QAction>
 #include <QScrollArea>
 #include "signin_dialog.h"
+#include <QFormLayout>
 
-student_profile_Dialog::student_profile_Dialog(QWidget *parent)
+student_profile_Dialog::student_profile_Dialog(std::vector<Student*> s, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::student_profile_Dialog)
+    , student_profile(s)
 {
     ui->setupUi(this);
+    Q_ASSERT(ui->label_student_name);
+    Q_ASSERT(ui->verticalLayout_menuBar);
+    Q_ASSERT(ui->verticalLayout_student_profile);
+
     studentMenuBar();
     studentProfile();
     studentSubjectProfile();
@@ -63,30 +69,46 @@ void student_profile_Dialog::on_actiondiscardChanges_triggered(){}
 
 void student_profile_Dialog::studentProfile()
 {
+    qDebug() << "studentProfile() called";
+    if (student_profile.empty()) {
+        QMessageBox::warning(this, "Fehler", "Kein Studentendatensatz gefunden.");
+        return;
+    }
 
-    groupBox = new QGroupBox("Your Current information");
-    QLineEdit *gpaEdit = new QLineEdit;
-    gpaEdit->setPlaceholderText("Current GPA e.g. 2.5");
-    /// Vetical Layout
-    vlayout = new QVBoxLayout;
-    QLineEdit *course = new QLineEdit;
-    QLineEdit *email = new QLineEdit;
-    QLineEdit *fullname = new QLineEdit;
-    fullname->setPlaceholderText("Fullname");
-    email->setPlaceholderText("Email");
-    course->setPlaceholderText("Current course");
-    vlayout->addWidget(course);
-    vlayout->addWidget(fullname);
-    vlayout->addWidget(email);
-    vlayout->addWidget(gpaEdit);
+    qDebug() << "student_profile size:" << student_profile.size();
+    Student* elem = student_profile[0];
+    if (!elem) {
+        qDebug() << "student_profile[0] is nullptr";
+        return;
+    }
 
-    vlayout->addSpacing(10);
+    qDebug() << "Student name:" << elem->get_fullname();
 
+    groupBox = new QGroupBox("Your Current Information", this);
+    ui->label_student_name->setText(elem->get_fullname());
 
-    groupBox->setLayout(vlayout);
+    QLineEdit* course = new QLineEdit(elem->get_course_str(), groupBox);
+    QLineEdit* fullname = new QLineEdit(elem->get_fullname(), groupBox);
+    QLineEdit* email = new QLineEdit(elem->get_email(), groupBox);
+    QLineEdit* gpaEdit = new QLineEdit(QString::number(elem->get_gpa()), groupBox);
 
+    course->setReadOnly(true);
+    fullname->setReadOnly(true);
+    email->setReadOnly(true);
+    gpaEdit->setReadOnly(true);
+
+    QFormLayout* formLayout = new QFormLayout;
+    formLayout->addRow("Course:", course);
+    formLayout->addRow("Full Name:", fullname);
+    formLayout->addRow("Email:", email);
+    formLayout->addRow("GPA:", gpaEdit);
+
+    groupBox->setLayout(formLayout);
     ui->verticalLayout_student_profile->addWidget(groupBox);
+
+
 }
+
 
 void student_profile_Dialog::studentSubjectProfile()
 {

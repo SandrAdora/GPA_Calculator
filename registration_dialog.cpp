@@ -26,9 +26,7 @@ registration_Dialog::registration_Dialog(Person*p, Administration* admin, QWidge
 registration_Dialog::~registration_Dialog()
 {
     delete ui;
-    for(auto student : students)
-        delete student;
-    students.clear();
+
     delete this->admnistration;
 
 }

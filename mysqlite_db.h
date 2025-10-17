@@ -63,6 +63,7 @@ public:
     int insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects,
     QSqlQuery get_student(int&); // return the infos of a specific student
     QSqlQuery get_student_login(const QString, const QString);
+    QSqlQuery signIn_admin(const QString&, const QString&);
 
     bool delete_student(int&); // id
     bool delete_subject(int&); // sub. id

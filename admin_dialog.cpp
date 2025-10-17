@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include "registration_dialog.h"
+#include "admin_profile_dialog.h"
 Admin_Dialog::Admin_Dialog( Person* p, Administration* a,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Admin_Dialog)
@@ -11,6 +12,7 @@ Admin_Dialog::Admin_Dialog( Person* p, Administration* a,QWidget *parent)
 
 {
     ui->setupUi(this);
+    setWindowTitle("Administration");
 
 
 }
@@ -45,7 +47,12 @@ void Admin_Dialog::on_checkBox_new_admin_clicked()
 
 void Admin_Dialog::on_pushButton_admin_ok_clicked()
 {
+
+
     // open admin profile
+    hide();
+    Admin_Profile_Dialog* admin = new Admin_Profile_Dialog();
+    admin->show();
 
 
 }

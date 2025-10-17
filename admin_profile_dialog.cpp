@@ -12,6 +12,7 @@ Admin_Profile_Dialog::Admin_Profile_Dialog(QWidget *parent)
     ui->setupUi(this);
     ui->listView_admin_profile->setEnabled(true);
     this->current_date();
+    this->admin_profile();
 
 }
 
@@ -66,5 +67,18 @@ void Admin_Profile_Dialog::on_pushButton_view_table_clicked()
     hide();
     this->view_tab = new Dialog_view_tables(this);
     this->view_tab->show();
+}
+
+
+/// Admin Profile
+///
+/// Retrives data from the database and displaying them in the admin profile
+/// @parmeter --> none
+/// @Return --> none
+void Admin_Profile_Dialog::admin_profile()
+{
+
+
+
 }
 

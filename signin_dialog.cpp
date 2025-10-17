@@ -22,27 +22,18 @@ void signIn_Dialog::on_pushButton_clicked()
     QString email = ui->lineEdit_email->text();
     QString password = ui->lineEdit_password->text();
 
-    // -- Fetch data from the database
-    QSqlDatabase db_connection = QSqlDatabase::addDatabase("QSQLITE", "signIn_connection");
-    db_connection.setDatabaseName("C:/Users/sandr/Documents/GitHub/Qt_Projects/GPA_Calculator/database/db_gpa.db");
-    QSqlQuery query(db_connection);
+    std::vector<Student* > profile = admin_class->SignInStudent(email, password);
 
-    query.prepare(
-        "SELECT ID, course, fullname, birthdate, gender, email, password FROM students WHERE :email=email AND :password=password");
-    query.bindValue(":email",  email);
-    query.bindValue(":password", password);
 
-    if(query.exec())
+    if(!profile.empty())
     {
-        QMessageBox::information(this, "Login Status", " successful");
+        this->pro = new student_profile_Dialog(profile);
         hide();
-        this->pro = new student_profile_Dialog(this);
-        this->pro->show();
-
+        pro->show();
+        return;
     }
-    QMessageBox::warning(this, "Login Status"," failed");
-    db_connection.close();
-    return;
+    QMessageBox::warning(this, "SignIn status", "failed.. email or password was wrong or student doesnt  exist");
+
 
 }
 

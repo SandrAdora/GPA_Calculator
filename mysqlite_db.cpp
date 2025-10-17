@@ -44,10 +44,6 @@ MySqlite_db::~MySqlite_db() {
 }
 
 
-// --- This fuction connect the datatabse with the presistance layer
-void MySqlite_db::connect() {
-
-}
 // -- Checks status of database
 
 bool MySqlite_db::status()
@@ -139,12 +135,12 @@ QSqlQuery MySqlite_db::get_student(int &id)
         QMessageBox::warning(nullptr, "ID Status", "Invalid id...try again");
 
 
-    if(!QFile::exists(DB_FILEPATH+default_db_name+".db"))
+    if(!QFile::exists(database_path))
         QMessageBox::warning(nullptr, "File Status", "does not exist");
 
 
-    QSqlQuery q;
-    q.prepare("SELECT ID, course, fullname, birthdate, gender, email, password, currentGpa FROM students WHERE :id=id ");
+    QSqlQuery q(this->db_connection);
+    q.prepare("SELECT ID, course, fullname, birthdate, gender, email, password, currentGpa FROM students WHERE id=:id ");
     q.bindValue(":id",id);
     if(!q.exec())
     {
@@ -156,8 +152,8 @@ QSqlQuery MySqlite_db::get_student(int &id)
 
 QSqlQuery MySqlite_db::get_student_login(const QString email, const QString password)
 {
-    QSqlQuery query;
-    query.prepare("select ID, course, fullname, birthdate, gender, email, currentGpa from students where :email=email and :password=password");
+    QSqlQuery query(this->db_connection);
+    query.prepare("select ID, course, fullname, birthdate, gender, email, currentGpa from students where email=:email and password=:password");
     query.bindValue(":email", email);
     query.bindValue(":password", password);
 
@@ -167,6 +163,21 @@ QSqlQuery MySqlite_db::get_student_login(const QString email, const QString pass
 
     }
     return query;
+}
+
+QSqlQuery MySqlite_db::signIn_admin(const QString &em, const QString &pw)
+{
+    // search if email exists
+    QSqlQuery q(this->db_connection);
+    q.prepare("select ID, fullname, birthdate, gender, email from admins where email=:em and password=:pw");
+    q.bindValue(":em", em);
+    q.bindValue(":pw", pw);
+    if(!q.exec())
+    {
+        QMessageBox::warning(nullptr, "Sign In admin status", "failed");
+    }
+
+    return q;
 }
 
 bool MySqlite_db::delete_student(int &id)
@@ -216,7 +227,7 @@ query MySqlite_db::get_students()
 query MySqlite_db::get_student_info(int &id, str &choice)
 {
 
-    QSqlQuery q;
+    QSqlQuery q(this->db_connection);
 
 
     if(choice == "only subjects"){
@@ -252,8 +263,8 @@ void MySqlite_db::set_db_name(QString& name)
 }
 auto filesystemToQstringPath(const fs::path& fs_path)
 {
-     std::string st_path =fs_path.u8string();
-      return QString::fromStdString(st_path);
+    std::string st_path =fs_path.u8string();
+    return QString::fromStdString(st_path);
 
 }
 
@@ -309,7 +320,7 @@ int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QStrin
     QSqlQuery query(this->db_connection);
     QString gdate = birthdate.toString("yyyy-MM-dd");
     query.prepare("INSERT INTO admins (fullname, birthdate, gender, email, password) "
-                  "VALUES (:fullname, :birthdate, :gender, :email, :password)");
+                "VALUES (:fullname, :birthdate, :gender, :email, :password)");
     query.bindValue(":fullname", fullname);
     query.bindValue(":birthdate", gdate);
     query.bindValue(":gender", gender);
@@ -327,7 +338,7 @@ int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QStrin
     else
     {
         qDebug()<< "Insert Admin ID error: " << idquery.lastError()
-                 << "Last query: " << idquery.lastQuery();
+                << "Last query: " << idquery.lastQuery();
         return -1;
     }
 
@@ -337,7 +348,7 @@ int MySqlite_db::insert_new_admin( QString& fullname,  QDate& birthdate,  QStrin
 bool MySqlite_db::check_if_table_exist( QString& table_name) {
     if (!status()) return false;
     this->db_connection = QSqlDatabase::addDatabase("QSQLITE");
-    this->db_connection.setDatabaseName(DB_FILEPATH);
+    this->db_connection.setDatabaseName(this->database_path);
 
     QSqlQuery query(this->db_connection);
         query.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=:table_name");

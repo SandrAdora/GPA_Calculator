@@ -24,7 +24,7 @@ enum Courses{
     , Medical_Engineering
     , Electronical_Engineering
     , Architect
-    , Administrator
+    , NO_INPUT
 
 
 };

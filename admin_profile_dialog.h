@@ -31,6 +31,7 @@ private:
     QDate _date;
     QVBoxLayout* vlayout;
     Dialog_view_tables* view_tab;
+    void admin_profile();
 
     void current_date();
 

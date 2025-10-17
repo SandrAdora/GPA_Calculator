@@ -66,7 +66,7 @@ public:
     bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
     bool delete_student(int &); // id of student to be deleted
     bool update_student_name(int&, QString); // id of student and what operation should be done
-
+    std::vector<Student*> SignInStudent(const QString&, const QString&);
 
     bool register_subject(QString&, int&, double&); // name of subject, ects and weights of each subjects
     bool delete_subject(int); // id of subject to be deleted
@@ -81,7 +81,7 @@ public:
     bool register_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
     bool update_admin_email(int, QString); // id and new email
     bool update_admin_name(int&, QString); // id of an admin and new name
-    std::vector<Admin*> get_admin(const QString, const QString); // get a specific admin
+    std::vector<Admin*> signInAdmin(const QString, const QString); // get a specific admin
     std::vector<Admin*> view_all_admin() const; // resturns a list of all admins
     bool delete_admin(int&);
 
@@ -92,7 +92,7 @@ public:
 
     // for each view and get obj an aquivalent qsql statement is needed
     std::vector<Student*>_sql(QSqlQuery); // student vector
-    std::vector<Admin*>A_sql(QSqlQuery); // admin vector
+    std::vector<Admin*>A_sql(QSqlQuery&); // admin vector
     std::vector<Subject*>S_sql(QSqlQuery); // subject vector
 
 

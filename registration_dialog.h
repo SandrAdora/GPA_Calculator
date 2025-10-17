@@ -35,9 +35,9 @@ private:
     Ui::registration_Dialog *ui;
    ;
     Person* person;
-    std::vector<Student*> students;
+
     Administration* admnistration;
-    ;
+
 
 
 
