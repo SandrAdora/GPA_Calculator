@@ -85,6 +85,7 @@ public:
     int& get_sudent_id(const QString& ); // student name
     int& get_subject_id(const QString& ); // subject name
     int& get_admin_id(const QString& ); // admin's name
+    QSqlQuery get_student_subjects(int&) const;
 
     query get_students() ;
     query get_student_info(int&, str&); // ID and what info should be retrieved

@@ -115,6 +115,14 @@ bool Administration::update_subject_weights(int& id ,double new_weights){
 
 }
 
+std::vector<Subject *> Administration::get_student_subjects(int student_id)
+
+{
+    query q = db->get_instance()->get_student_subjects(student_id);
+    return S_sql(q);
+
+}
+
 bool Administration::check_email(QString &email, QString table)
 {
     if(this->db->get_instance()->email_exists(email, table))
@@ -123,6 +131,8 @@ bool Administration::check_email(QString &email, QString table)
 }
 
 
+
+/// ---- translating query ---> std::vector<type>
 std::vector<Student*> Administration::_sql(QSqlQuery ql)
 {
     std::vector<Student*> _lists;
@@ -165,9 +175,30 @@ std::vector<Admin *> Administration::A_sql(QSqlQuery &q)
 
         _list.push_back(admin);
     }
-    delete admin;
-    admin = nullptr;
+
     return _list;
+
+}
+
+std::vector<Subject *> Administration::S_sql(QSqlQuery q)
+{
+    std::vector<Subject*> list;
+    Subject* subject;
+
+    while(q.next())
+    {
+        subject = new Subject();
+        int id = q.value("ID").toInt();
+        int student_id = q.value("student_id").toInt();
+        subject->set_subject(q.value("subject_name").toString());
+        subject->set_ects(q.value("subject_ects").toInt());
+        subject->set_weights(q.value("subject_weights").toInt());
+        subject->set_id(id);
+        subject->set_student_id(student_id);
+        list.push_back(subject);
+    }
+
+    return list;
 
 }
 

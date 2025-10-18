@@ -23,17 +23,18 @@ void signIn_Dialog::on_pushButton_clicked()
     QString password = ui->lineEdit_password->text();
 
     std::vector<Student* > profile = admin_class->SignInStudent(email, password);
+    int id = profile[0]->get_id();
+    std::vector<Subject*> subjects = admin_class->get_student_subjects(id);
 
 
     if(!profile.empty())
     {
-        this->pro = new student_profile_Dialog(profile);
+        this->pro = new student_profile_Dialog(profile, subjects);
         hide();
         pro->show();
         return;
     }
     QMessageBox::warning(this, "SignIn status", "failed.. email or password was wrong or student doesnt  exist");
-
 
 }
 

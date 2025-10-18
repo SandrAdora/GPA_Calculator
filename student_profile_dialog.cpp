@@ -9,10 +9,11 @@
 #include "signin_dialog.h"
 #include <QFormLayout>
 
-student_profile_Dialog::student_profile_Dialog(std::vector<Student*> s, QWidget *parent)
+student_profile_Dialog::student_profile_Dialog(std::vector<Student*> s, std::vector<Subject*> sub, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::student_profile_Dialog)
     , student_profile(s)
+    , student_subejects(sub)
 {
     ui->setupUi(this);
     Q_ASSERT(ui->label_student_name);
@@ -118,7 +119,9 @@ void student_profile_Dialog::studentSubjectProfile()
     listWidget = new QListWidget(this);
     QStringList studentSubjects;
     // will be filled from the subjects from the database
-    studentSubjects  = {"Mathematics", "Programming 1", "Programming 2", "Data structures" };
+
+    for(auto& subjects : student_subejects)
+        studentSubjects.push_back(subjects->get_subject_name());
     listWidget->addItems(studentSubjects);
     QWidget *scrollWidget = new QWidget;
 

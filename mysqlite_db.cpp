@@ -210,6 +210,18 @@ bool MySqlite_db::delete_subject(int &id)
 
 }
 
+QSqlQuery MySqlite_db::get_student_subjects(int &sid) const
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("select ID, student_id, subject_name, subject_weights, subject_ects from subjects where student_id=:id");
+    QString sid_str = QString::number(sid);
+    q.bindValue(":id", sid_str);
+    if(q.exec())
+        return q;
+    QMessageBox::warning(nullptr, "Get student subjects", "failed to retrieve student subjects");
+
+}
+
 query MySqlite_db::get_students()
 {
 

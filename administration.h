@@ -74,7 +74,8 @@ public:
     bool update_subject_name(int&, QString&); // id and name of the object
     bool update_subject_weights(int& ,double); // id and new weights for subject
     std::vector<Subject*> view_all_subject() const; //returns a ist of all subjects
-    std::vector<Subject*> get_subject(const QString, const QString); // gets a specific subject
+    std::vector<Subject*> get_student_subjects(int ); // get all student subject
+    std::vector<Subject* >get_subject_info(const QString); // display the info of a specific subject
     std::vector<Subject*> subjects;
 
     bool update_admin_birthdate(int& Qdate);

@@ -10,7 +10,7 @@
 #include <QMenuBar>
 #include <QListWidget>
 #include "student.h"
-
+#include "subject.h"
 
 namespace Ui {
 class student_profile_Dialog;
@@ -21,7 +21,7 @@ class student_profile_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit student_profile_Dialog(std::vector<Student*> ,QWidget *parent = nullptr);
+    explicit student_profile_Dialog(std::vector<Student*>, std::vector<Subject*> ,QWidget *parent = nullptr);
     ~student_profile_Dialog();
 
 private slots:
@@ -40,6 +40,7 @@ private:
     QAction *discardChanges;
 
     std::vector<Student*> student_profile;
+    std::vector<Subject*> student_subejects;
 
     // adding a new menu to the dialog
     QMenuBar *menubar;
