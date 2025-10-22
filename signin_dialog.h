@@ -25,6 +25,7 @@ private:
     Ui::signIn_Dialog *ui;
     student_profile_Dialog *pro;
     Administration* admin_class;
+    std::vector<Student*> student_vec;
 
 };
 

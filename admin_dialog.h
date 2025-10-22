@@ -32,6 +32,8 @@ private:
 
     Person* person;
     Administration *admin;
+    std::vector<Admin*> admin_profile_vec;
+
 
     Admin_Profile_Dialog* admin_profile;
     QString pw;

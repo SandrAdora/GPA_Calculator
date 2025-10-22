@@ -24,7 +24,7 @@ public:
     QString convertToString(Gender gen);
     Gender convertStringToInt(QString& gen);
     int get_personID() const;
-    void set_personId(int&);
+    virtual void set_personId(int) = 0;
 
 
 

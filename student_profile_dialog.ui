@@ -75,6 +75,17 @@
     <string/>
    </property>
   </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_4">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>50</y>
+     <width>331</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_semester"/>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -8,9 +8,6 @@
 // --- Singleton
 MySqlite_db* MySqlite_db::instance = nullptr;
 
-
-
-
 // -- Establish database connection
 MySqlite_db::MySqlite_db() {
 
@@ -31,6 +28,7 @@ MySqlite_db::MySqlite_db() {
 // --- This instance communicates with the business layer
 MySqlite_db *MySqlite_db::get_instance()
 {
+    qDebug() << "Singleton: get_instance was called....";
     if(this->instance == nullptr)
         this->instance = new MySqlite_db();
 
@@ -150,33 +148,38 @@ QSqlQuery MySqlite_db::get_student(int &id)
     return q;
 }
 
-QSqlQuery MySqlite_db::get_student_login(const QString email, const QString password)
+QSqlQuery MySqlite_db::signIn_student(const QString email, const QString password)
 {
+    if (!this->db_connection.isOpen()) {
+        qDebug() << "Database connection is not open!";
+        QMessageBox::critical(nullptr, "Database Error", this->db_connection.lastError().text());
+
+    }
     QSqlQuery query(this->db_connection);
-    query.prepare("select ID, course, fullname, birthdate, gender, email, currentGpa from students where email=:email and password=:password");
+    query.prepare("select ID, course, fullname, birthdate, gender, email, password, currentGpa from students where email=:email and password=:password");
     query.bindValue(":email", email);
     query.bindValue(":password", password);
 
     if(!query.exec())
     {
         qDebug() << "Error exection error: "<< query.lastError().text() << "Error last query: " << query.lastQuery();
-
     }
+    this->db_connection.close();
     return query;
 }
 
-QSqlQuery MySqlite_db::signIn_admin(const QString &em, const QString &pw)
+QSqlQuery MySqlite_db::signIn_admin( const QString& em, const QString &pw)
 {
     // search if email exists
     QSqlQuery q(this->db_connection);
-    q.prepare("select ID, fullname, birthdate, gender, email from admins where email=:em and password=:pw");
-    q.bindValue(":em", em);
+    q.prepare("select admin_id, fullname, birthdate, gender, email, password from admins where email=:em AND password=:pw");
     q.bindValue(":pw", pw);
+    q.bindValue(":em", em);
     if(!q.exec())
     {
         QMessageBox::warning(nullptr, "Sign In admin status", "failed");
     }
-
+        this->db_connection.close();
     return q;
 }
 
@@ -191,6 +194,8 @@ bool MySqlite_db::delete_student(int &id)
 
 }
 
+
+/// Delete Subject
 bool MySqlite_db::delete_subject(int &id)
 {
     if(id < 0)
@@ -210,23 +215,48 @@ bool MySqlite_db::delete_subject(int &id)
 
 }
 
+/// Update Student ects
+
+bool MySqlite_db::update_student_gpa(const int &id, const float ects)
+{
+
+    if(id < 0 )
+    {
+        QMessageBox::warning(nullptr, "Update Student GPA", "invalid ID");
+        return false;
+    }
+
+    QSqlQuery q(this->db_connection);
+    q.prepare("UPDATE students SET ects=:ects WHERE id=:id ");
+    q.bindValue(":id", id);
+    q.bindValue(":ects", ects);
+    if(!q.exec())
+    {
+        QMessageBox::warning(nullptr, "Update Student Status", q.lastError().text());
+        return false;
+    }
+    return true;
+
+
+}
+
 QSqlQuery MySqlite_db::get_student_subjects(int &sid) const
 {
     QSqlQuery q(this->db_connection);
     q.prepare("select ID, student_id, subject_name, subject_weights, subject_ects from subjects where student_id=:id");
-    QString sid_str = QString::number(sid);
-    q.bindValue(":id", sid_str);
+
+    q.bindValue(":id", sid);
     if(q.exec())
-        return q;
-    QMessageBox::warning(nullptr, "Get student subjects", "failed to retrieve student subjects");
+        QMessageBox::warning(nullptr, "Get student subjects", "failed to retrieve student subjects");
+    return q;
 
 }
 
 query MySqlite_db::get_students()
 {
 
-    QSqlQuery q;
-    q.prepare("SELECT ID, course, fullname, birthdate, gender, email, currentGpa  FROM students");
+    QSqlQuery q(this->db_connection);
+    q.prepare("SELECT ID, course, fullname, birthdate, gender, email, currentGpa, password  FROM students");
     if(!q.exec())
     {
         QMessageBox::warning(nullptr, "Get all Students error", q.lastError().text());
@@ -259,6 +289,17 @@ query MySqlite_db::get_student_info(int &id, str &choice)
             QMessageBox::warning(nullptr, "Student Info error", q.lastError().text());
     }
 
+    return q;
+
+}
+
+query MySqlite_db::get_admins()
+{
+
+    QSqlQuery q(this->db_connection);
+    q.prepare("SELECT admin_id, fullname, birthdate, gender, email, password FROM admins");
+    if(!q.exec())
+        QMessageBox::warning(nullptr, "Get all Admins error",q.lastError().text());
     return q;
 
 }
@@ -302,6 +343,17 @@ bool MySqlite_db::email_exists(QString &em, QString& table)
         return true;
     return false;
 
+}
+
+bool MySqlite_db::Connection()
+{
+    if(this->db_connection.open() || this->db_connection.isValid())
+    {
+        QMessageBox::information(nullptr, "Database Connection Status", "success");
+        return true;
+    }
+    QMessageBox::warning(nullptr, "Database Connection Status", "failure");
+    return false;
 }
 
 // search path

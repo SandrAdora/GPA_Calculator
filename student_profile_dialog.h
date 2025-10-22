@@ -21,13 +21,14 @@ class student_profile_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit student_profile_Dialog(std::vector<Student*>, std::vector<Subject*> ,QWidget *parent = nullptr);
+    explicit student_profile_Dialog(Student*, std::vector<Subject*>  ,QWidget *parent = nullptr);
     ~student_profile_Dialog();
 
 private slots:
     void on_actionsignout_triggered();
     void on_actionsaveChanges_triggered();
     void on_actiondiscardChanges_triggered();
+    void on_actionnewSemester_triggered();
 
 private:
     Ui::student_profile_Dialog *ui;
@@ -38,8 +39,9 @@ private:
     QAction *signOut;
     QAction *saveChanges;
     QAction *discardChanges;
+    QAction* addNewSemester;
 
-    std::vector<Student*> student_profile;
+    Student* student_profile;
     std::vector<Subject*> student_subejects;
 
     // adding a new menu to the dialog
@@ -47,6 +49,7 @@ private:
     void studentMenuBar();
     void studentProfile();
     void studentSubjectProfile();
+    void studentSemesterProfile();
 };
 
 #endif // STUDENT_PROFILE_DIALOG_H

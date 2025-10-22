@@ -47,14 +47,16 @@ public:
 
      // dynamic Method to create the database table
     string build_create_table_sql(const vector<string>&);
-    string create_tables(int ); // amount or rows the database table should have
+    // creates sql strings according to the amount of rows
+    string create_tables(int );
+    // amount or rows the database table should have
     bool build_table(QStringList&, str&, str = ""); // list of sql statements & name of the table and references if available
     bool check_if_table_exist(str&); // searches for table existance
 
 
     // Build Connection to existing database
     void disconnect();
-    void connect();
+
     bool status();
 
     // Operations
@@ -62,7 +64,7 @@ public:
 
     int insert_subject(int&, QString&, int&, float&); // student id, name of the subject, weights of each subject and ects,
     QSqlQuery get_student(int&); // return the infos of a specific student
-    QSqlQuery get_student_login(const QString, const QString);
+    QSqlQuery signIn_student(const QString, const QString);
     QSqlQuery signIn_admin(const QString&, const QString&);
 
     bool delete_student(int&); // id
@@ -104,7 +106,7 @@ public:
      // helper functions
      auto toFilesystemPath(QString& );
      bool email_exists(QString& em, QString& table);
-
+     bool Connection();
 
 
 private:

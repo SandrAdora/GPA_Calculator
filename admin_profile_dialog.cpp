@@ -5,9 +5,11 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QHBoxLayout>
-Admin_Profile_Dialog::Admin_Profile_Dialog(QWidget *parent)
+#include <QGroupBox>
+Admin_Profile_Dialog::Admin_Profile_Dialog( Admin* a, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Admin_Profile_Dialog)
+    , admin_pro(a)
 {
     ui->setupUi(this);
     ui->listView_admin_profile->setEnabled(true);
@@ -19,6 +21,7 @@ Admin_Profile_Dialog::Admin_Profile_Dialog(QWidget *parent)
 Admin_Profile_Dialog::~Admin_Profile_Dialog()
 {
     delete ui;
+    delete admin_pro;
 }
 
 void Admin_Profile_Dialog::on_pushButton_create_table_clicked()
@@ -79,6 +82,18 @@ void Admin_Profile_Dialog::admin_profile()
 {
 
 
+    /// This section displays the the details of the admin
+    QGroupBox* groupBox = new QGroupBox();
+    QString id = QString::number(admin_pro->get_admin_id());
+    QLabel* admin_id = new QLabel(id, groupBox);
+    QLabel* admin_name = new QLabel(admin_pro->get_fullname(), groupBox);
+    QLabel* admin_email = new QLabel(admin_pro->get_email(), groupBox);
+
+    // adding widgets to layout
+    QVBoxLayout* v = new QVBoxLayout();
+    v->addWidget(groupBox);
+    // add layout to screen
+    ui->verticalLayout_profile->addLayout(v);
 
 }
 

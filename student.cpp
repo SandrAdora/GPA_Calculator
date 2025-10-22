@@ -54,10 +54,10 @@ void Student::set_course(Courses cs){
 
 }
 /*This function will first convert the input str to real before assigning it to the attribtute*/
-void Student::set_gpa(QString &gpa)
+void Student::set_gpa(double &gpa)
 
 {
-    this->gpa = gpa.toDouble();
+    this->gpa = gpa;
 
 }
 int Student::get_id() const {

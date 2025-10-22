@@ -15,7 +15,11 @@ public:
         weights=1;
 
     }
-    Subject(str, int, float);
+    Subject(str sub_name, int weights, float ects){
+        subName=sub_name;
+        weights=weights;
+        ects=ects;
+    }
     Subject(str, float);
     Subject(str);
 

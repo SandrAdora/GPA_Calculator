@@ -35,7 +35,6 @@ Gender Person::convertStringToInt(QString& gen){
         return Gender::MALE;
     else if(gen == "female")
         return Gender::FEAMALE;
-
     return Gender::NOTHING;
 
 }
@@ -44,8 +43,9 @@ int Person::get_personID() const
 {
     return this->personID;
 }
-
-void Person::set_personId(int &id)
+/*
+void Person::set_personId(int id)
 {
     this->personID = id;
 }
+*/

@@ -135,6 +135,6 @@ void Create_Table_Dialog::add_reference()
 void Create_Table_Dialog::on_actiongoBack_triggered()
 {
     hide();
-    Admin_Profile_Dialog* diag = new Admin_Profile_Dialog(this);
+    Admin_Profile_Dialog* diag = new Admin_Profile_Dialog();
     diag->show();
 }

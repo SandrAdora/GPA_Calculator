@@ -115,11 +115,14 @@ void Add_Elem_To_Table_Dialog::on_pushButton_create_sql_clicked()
     for (int i = 0; i < sql_elems.size(); ++i)
         qDebug() << sql_elems;
 
-    if(!db_instance->status())
+
+    /// Administration
+    if(!this->administator->get_administration()->check_status())
 
         QMessageBox::warning(this, "Database connection ", "faliure");
-    //bool success = db_instance->get_instance()->build_table(this->sql_elems, table_name);
-    if(true)
+    bool success =  true; //this->administator->->build_table(this->sql_elems, table_name);
+
+    if(success)
         QMessageBox::information(this, "Success", "Table was created");
     else
         QMessageBox::warning(this, "Faliure", "Table could not be created");
@@ -157,6 +160,22 @@ void Add_Elem_To_Table_Dialog::go_back_menu()
     vl->addWidget(menu);
     // add vl to parent layout
     ui->verticalLayout->addLayout(vl);
+}
+
+/// Function sends the sql statement to the database
+/// @arg:
+///    sql_elem (std::vector<QStringList>)
+/// @return:
+///     none
+void Add_Elem_To_Table_Dialog::send_to_database(std::vector<QStringList> sql_elem)
+{
+
+    // iterate through list extracting the
+    for(auto& elem : sql_elem)
+    {
+
+    }
+
 }
 
 

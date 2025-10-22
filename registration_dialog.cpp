@@ -94,7 +94,7 @@ void registration_Dialog::on_pushButton_signUp_clicked()
 
     if(major == "Administrator")
     {
-        success=this->admnistration->register_admin(fullname,birthdate,gender,email,password);
+        success=this->admnistration->get_administration()->register_admin(fullname,birthdate,gender,email,password);
         if(success)
         {
 

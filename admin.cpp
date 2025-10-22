@@ -56,3 +56,8 @@ bool Admin::admin_(str input){
 str Admin::get_it_admin_password() const {
     return this->admin_password;
 }
+
+int Admin::get_admin_id() const
+{
+    return this->admin_id;
+}

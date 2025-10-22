@@ -72,7 +72,7 @@ void Create_new_Database_Dialog::on_pushButton_disconnect_db_clicked()
 void Create_new_Database_Dialog::on_actiongoback_triggered()
 {
     hide();
-    Admin_Profile_Dialog*  di = new Admin_Profile_Dialog(this);
+    Admin_Profile_Dialog*  di = new Admin_Profile_Dialog();
     di->show();
 
 }

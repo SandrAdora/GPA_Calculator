@@ -9,7 +9,7 @@
 #include "signin_dialog.h"
 #include <QFormLayout>
 
-student_profile_Dialog::student_profile_Dialog(std::vector<Student*> s, std::vector<Subject*> sub, QWidget *parent)
+student_profile_Dialog::student_profile_Dialog(Student* s, std::vector<Subject*> sub, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::student_profile_Dialog)
     , student_profile(s)
@@ -23,6 +23,7 @@ student_profile_Dialog::student_profile_Dialog(std::vector<Student*> s, std::vec
     studentMenuBar();
     studentProfile();
     studentSubjectProfile();
+    studentSemesterProfile();
 }
 
 student_profile_Dialog::~student_profile_Dialog()
@@ -38,10 +39,13 @@ void student_profile_Dialog::studentMenuBar()
     signOut = new QAction(QIcon(":/icons/documentation/logos/signout.png"), "signOut", this);
     saveChanges = new QAction(QIcon(":/icons/documentation/logos/save_changes.jpg"), "saveChanges", this);
     discardChanges = new QAction(QIcon(":/icons/documentation/logos/Delete-Icon-Transparent-PNG.png"), "discardChanges", this);
+    addNewSemester = new QAction(QIcon(""), "add new semester", this);
+
     // Connect actions to respective methods
     connect(signOut, &QAction::triggered, this, &student_profile_Dialog::on_actionsignout_triggered);
     connect(saveChanges, &QAction::triggered, this, &student_profile_Dialog::on_actionsaveChanges_triggered);
     connect(discardChanges, &QAction::triggered, this, &student_profile_Dialog::on_actiondiscardChanges_triggered);
+    connect(addNewSemester, &QAction::triggered, this, &student_profile_Dialog::on_actionnewSemester_triggered);
 
     // Add actions to menuebar
     fileMenus->addAction(saveChanges);
@@ -68,16 +72,22 @@ void student_profile_Dialog::on_actionsignout_triggered(){
 void student_profile_Dialog::on_actionsaveChanges_triggered(){}
 void student_profile_Dialog::on_actiondiscardChanges_triggered(){}
 
+void student_profile_Dialog::on_actionnewSemester_triggered()
+{
+    hide();
+    QMessageBox::information(this, "Action add new Semester triggered", "success");
+}
+
 void student_profile_Dialog::studentProfile()
 {
     qDebug() << "studentProfile() called";
-    if (student_profile.empty()) {
-        QMessageBox::warning(this, "Fehler", "Kein Studentendatensatz gefunden.");
+    if (student_profile == nullptr) {
+        QMessageBox::warning(this, "Error.", "Student could not be found!!");
         return;
     }
 
-    qDebug() << "student_profile size:" << student_profile.size();
-    Student* elem = student_profile[0];
+
+    Student* elem = student_profile;
     if (!elem) {
         qDebug() << "student_profile[0] is nullptr";
         return;
@@ -86,7 +96,7 @@ void student_profile_Dialog::studentProfile()
     qDebug() << "Student name:" << elem->get_fullname();
 
     groupBox = new QGroupBox("Your Current Information", this);
-    ui->label_student_name->setText(elem->get_fullname());
+    ui->label_student_name->setText(elem->get_course_str());
 
     QLineEdit* course = new QLineEdit(elem->get_course_str(), groupBox);
     QLineEdit* fullname = new QLineEdit(elem->get_fullname(), groupBox);
@@ -106,8 +116,6 @@ void student_profile_Dialog::studentProfile()
 
     groupBox->setLayout(formLayout);
     ui->verticalLayout_student_profile->addWidget(groupBox);
-
-
 }
 
 
@@ -144,4 +152,19 @@ void student_profile_Dialog::studentSubjectProfile()
 
     another->setLayout(vlSub);
     ui->verticalLayout_studentSubject->addWidget(another);
+}
+
+void student_profile_Dialog::studentSemesterProfile()
+{
+
+    // display current semester
+    QLabel* semester = new QLabel("Semester", this);
+
+
+    QVBoxLayout* vl = new QVBoxLayout();
+    vl->addWidget(semester);
+    ui->verticalLayout_semester->addLayout(vl);
+
+
+
 }

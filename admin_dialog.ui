@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>312</height>
+    <width>506</width>
+    <height>398</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QLabel" name="label_admin_image">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>10</y>
+     <x>180</x>
+     <y>20</y>
      <width>141</width>
      <height>151</height>
     </rect>
@@ -32,8 +32,8 @@
   <widget class="QLineEdit" name="lineEdit_admin">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>210</y>
+     <x>130</x>
+     <y>290</y>
      <width>221</width>
      <height>31</height>
     </rect>
@@ -46,9 +46,9 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>170</y>
-     <width>91</width>
-     <height>41</height>
+     <y>190</y>
+     <width>161</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -63,7 +63,7 @@ font: 700 10pt &quot;Segoe UI&quot;;</string>
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>270</y>
+     <y>340</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -78,14 +78,27 @@ font: 700 10pt &quot;Segoe UI&quot;;</string>
   <widget class="QPushButton" name="pushButton_admin_ok">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>220</y>
-     <width>61</width>
-     <height>21</height>
+     <x>370</x>
+     <y>270</y>
+     <width>71</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>OK</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_email">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>250</y>
+     <width>221</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

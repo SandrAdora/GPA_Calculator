@@ -39,7 +39,7 @@ public:
 
 
     void set_course(Courses);
-    void set_gpa(QString&);
+    void set_gpa(double&);
     QString get_course_str() const;
     Courses get_course_cour(QString& major) const;
     Courses get_course()const;
@@ -53,6 +53,7 @@ public:
     void set_password(QString pw) override {password = pw;}
     void set_email(QString em) override{email = em;}
     void set_gender(QString gen) override {gender= convertStringToInt(gen);}
+    void set_personId(int id)  { student_id = id;}
 
     QString get_fullname() const override {return fullname;}
     QString get_email() const override{return email;}

@@ -7,7 +7,7 @@
 #include <QCheckBox>
 #include <QMenu>
 #include <QtCore/qglobal.h> // or include <QCoreApplication> indirectly
-
+#include "administration.h"
 
 
 
@@ -45,8 +45,10 @@ private:
     QList<QLineEdit*> referenceFields;
     QList<QCheckBox*> incrementFields;
     QStringList sql_elems;
+    Administration* administator;
 
     void available_elems();
     void go_back_menu();
+    void send_to_database(std::vector<QStringList>);
 };
 #endif // ADD_ELEM_TO_TABLE_DIALOG_H

@@ -42,7 +42,7 @@ void Dialog_view_tables::on_pushButton_load_table_clicked()
 void Dialog_view_tables::on_actiongoback_triggered()
 {
     hide();
-    Admin_Profile_Dialog* ad = new Admin_Profile_Dialog(this);
+    Admin_Profile_Dialog* ad = new Admin_Profile_Dialog();
     ad->show();
 }
 

@@ -47,12 +47,35 @@ void Admin_Dialog::on_checkBox_new_admin_clicked()
 
 void Admin_Dialog::on_pushButton_admin_ok_clicked()
 {
+    // get Admin details
 
+    QString usr_pw = ui->lineEdit_admin->text();
+    QString email = ui->lineEdit_email->text();
 
-    // open admin profile
-    hide();
-    Admin_Profile_Dialog* admin = new Admin_Profile_Dialog();
-    admin->show();
+    bool ok = this->admin->get_administration()->signInAdmin( email, usr_pw);
+    if(ok)
+    {
+        admin_profile_vec = admin->get_administration()->get_Admin(email, usr_pw);
+        Admin* obj = new Admin();
+        obj->set_fullname( admin_profile_vec[0]->get_fullname());
+        obj->set_birthdate(admin_profile_vec[0]->get_birthdate());
+        QString gender = admin->genderToString(admin_profile_vec[0]->get_gender());
+        obj->set_gender(gender);
+        obj->set_email(admin_profile_vec[0]->get_email());
+        obj->set_password(admin_profile_vec[0]->get_password());
+        obj->set_personId(admin_profile_vec[0]->get_admin_id());
+
+        // pass object to profile
+        this->admin_profile = new Admin_Profile_Dialog(obj);
+        this->admin_profile->show();
+        hide();
+        return;
+    }
+    else
+        QMessageBox::warning(nullptr, "Admin Signing In Error", "failed");
+
+    close();
+
 
 
 }

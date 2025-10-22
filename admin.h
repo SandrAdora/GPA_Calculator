@@ -26,6 +26,7 @@ public:
     QString get_password() const override {return password;}
     QDate get_birthdate() const override{return birthdate;}
     Gender get_gender() const override {return gender;}
+    void set_personId(int id) override  {admin_id = id;}
 
     QString password_generator();
 

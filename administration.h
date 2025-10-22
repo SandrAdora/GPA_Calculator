@@ -30,20 +30,7 @@ enum MethodType {
 
 // responsible for creating and returning the type of person on demand
 // new features can be added if neccessary
-class Factory
-{
-    Person* create(MethodType t)
-    {
-        switch (t) {
-        case MethodType::admin:
-            return new Admin();
-        case MethodType::student:
-            return new Student();
-        default:
-            break;
-        }
-    }
-};
+
 
 // factory method class
 class Administration : public Student , Admin
@@ -51,22 +38,20 @@ class Administration : public Student , Admin
 public:
     static Administration* Instance(); // Instance
     Administration* get_administration();
+    Administration();
 
     unique_ptr<Person> FactoryMethod(); // factory method for creating different obj. like student or admin
 
 
     unique_ptr<Person> create_object(MethodType& ); // call factory method and returns requested obj
-
-
-
-
-    std::vector<Student*> get_student(const QString, const QString); // get a specific student
+// get a specific student
     std::vector<Student*> view_all_student() const; // returns a list of all students
     void view_all_subjects() const;
     bool register_student(Courses& , QString &, QDate &, QString&, QString&, QString&, QString&); // vals consitsts of course of study, fullname, birithdate, gender, email, password and current gpa
     bool delete_student(int &); // id of student to be deleted
     bool update_student_name(int&, QString); // id of student and what operation should be done
-    std::vector<Student*> SignInStudent(const QString&, const QString&);
+    bool SignInStudent(const QString&, const QString&);
+    std::vector<Student*> get_student(QString , QString);
 
     bool register_subject(QString&, int&, double&); // name of subject, ects and weights of each subjects
     bool delete_subject(int); // id of subject to be deleted
@@ -82,14 +67,17 @@ public:
     bool register_admin(QString&, QDate&, QString&, QString&, QString&); // fullname, birthdate, gender, email and password
     bool update_admin_email(int, QString); // id and new email
     bool update_admin_name(int&, QString); // id of an admin and new name
-    std::vector<Admin*> signInAdmin(const QString, const QString); // get a specific admin
+    std::vector<Admin*> get_Admin(const QString , const QString); // get a specific admin using password
+    bool signInAdmin(QString, QString); // Email not reqiured
     std::vector<Admin*> view_all_admin() const; // resturns a list of all admins
     bool delete_admin(int&);
 
+    Courses stringToCourse(QString&);
+    QString  courseToString(Courses&);
+    Gender stringToGender(QString&);
+    QString genderToString(Gender);
 
     bool check_email(QString&, QString);
-
-
 
     // for each view and get obj an aquivalent qsql statement is needed
     std::vector<Student*>_sql(QSqlQuery); // student vector
@@ -97,11 +85,20 @@ public:
     std::vector<Subject*>S_sql(QSqlQuery); // subject vector
 
 
+    //  student register stores all students registered, making retrieving data alot faster
+    Student* studentRegister(int ); // returns an obj student
 
+
+    // Helper Functions
+    bool check_status();
+
+    void create_table();
+protected:
+    Student* student_obj;
 private:
-
-
     MySqlite_db* db;
+    static Administration* admin_instance;
+    std::vector<std::vector<Student*>> student_REGISTER;
 
 };
 
