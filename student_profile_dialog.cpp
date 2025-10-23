@@ -16,10 +16,6 @@ student_profile_Dialog::student_profile_Dialog(Student* s, std::vector<Subject*>
     , student_subejects(sub)
 {
     ui->setupUi(this);
-    Q_ASSERT(ui->label_student_name);
-    Q_ASSERT(ui->verticalLayout_menuBar);
-    Q_ASSERT(ui->verticalLayout_student_profile);
-
     studentMenuBar();
     studentProfile();
     studentSubjectProfile();
@@ -39,7 +35,7 @@ void student_profile_Dialog::studentMenuBar()
     signOut = new QAction(QIcon(":/icons/documentation/logos/signout.png"), "signOut", this);
     saveChanges = new QAction(QIcon(":/icons/documentation/logos/save_changes.jpg"), "saveChanges", this);
     discardChanges = new QAction(QIcon(":/icons/documentation/logos/Delete-Icon-Transparent-PNG.png"), "discardChanges", this);
-    addNewSemester = new QAction(QIcon(""), "add new semester", this);
+    addNewSemester = new QAction(QIcon(":/icons/documentation/logos/semester-icon-vector.jpg"), "add new semester", this);
 
     // Connect actions to respective methods
     connect(signOut, &QAction::triggered, this, &student_profile_Dialog::on_actionsignout_triggered);
@@ -48,8 +44,9 @@ void student_profile_Dialog::studentMenuBar()
     connect(addNewSemester, &QAction::triggered, this, &student_profile_Dialog::on_actionnewSemester_triggered);
 
     // Add actions to menuebar
-    fileMenus->addAction(saveChanges);
+    fileMenus->addAction(addNewSemester);
     fileMenus->addAction(discardChanges);
+    fileMenus->addAction(saveChanges);
     fileMenus->addAction(signOut);
 
     menubar->addMenu(fileMenus);
@@ -74,9 +71,9 @@ void student_profile_Dialog::on_actiondiscardChanges_triggered(){}
 
 void student_profile_Dialog::on_actionnewSemester_triggered()
 {
-    hide();
     QMessageBox::information(this, "Action add new Semester triggered", "success");
 }
+
 
 void student_profile_Dialog::studentProfile()
 {
@@ -86,22 +83,22 @@ void student_profile_Dialog::studentProfile()
         return;
     }
 
-
-    Student* elem = student_profile;
-    if (!elem) {
+    if (!student_profile) {
         qDebug() << "student_profile[0] is nullptr";
         return;
     }
 
-    qDebug() << "Student name:" << elem->get_fullname();
+
+    qDebug() << "Student name:" << student_profile->get_fullname();
 
     groupBox = new QGroupBox("Your Current Information", this);
-    ui->label_student_name->setText(elem->get_course_str());
-
-    QLineEdit* course = new QLineEdit(elem->get_course_str(), groupBox);
-    QLineEdit* fullname = new QLineEdit(elem->get_fullname(), groupBox);
-    QLineEdit* email = new QLineEdit(elem->get_email(), groupBox);
-    QLineEdit* gpaEdit = new QLineEdit(QString::number(elem->get_gpa()), groupBox);
+    Administration obj;
+    Courses cor = student_profile->get_course();
+    QString course_str= obj.courseToString(cor);
+    QLineEdit* course = new QLineEdit( course_str, groupBox);
+    QLineEdit* fullname = new QLineEdit(student_profile->get_fullname(), groupBox);
+    QLineEdit* email = new QLineEdit(student_profile->get_email(), groupBox);
+    QLineEdit* gpaEdit = new QLineEdit(QString::number(student_profile->get_gpa()), groupBox);
 
     course->setReadOnly(true);
     fullname->setReadOnly(true);
@@ -115,6 +112,7 @@ void student_profile_Dialog::studentProfile()
     formLayout->addRow("GPA:", gpaEdit);
 
     groupBox->setLayout(formLayout);
+    ui->label_student_name->setText(course_str);
     ui->verticalLayout_student_profile->addWidget(groupBox);
 }
 
