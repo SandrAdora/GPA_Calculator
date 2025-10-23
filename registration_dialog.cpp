@@ -90,7 +90,7 @@ void registration_Dialog::on_pushButton_signUp_clicked()
     QString curr_gpa = ui->lineEdit_gpa->text();;
 
     bool success = false;
-    this->hide();
+
 
     if(major == "Administrator")
     {
