@@ -33,7 +33,7 @@ enum MethodType {
 
 
 // factory method class
-class Administration : public Student , Admin
+class Administration : public Student , Admin, Subject
 {
 public:
     static Administration* Instance(); // Instance
