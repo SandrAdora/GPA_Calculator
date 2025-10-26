@@ -29,6 +29,10 @@ private slots:
     void on_actionsaveChanges_triggered();
     void on_actiondiscardChanges_triggered();
     void on_actionnewSemester_triggered();
+    void on_actioncalculateGpa_triggered();
+
+    void on_insertBtn_clicked();
+    void on_deleteBtn_clicked();
 
 private:
     Ui::student_profile_Dialog *ui;
@@ -40,6 +44,10 @@ private:
     QAction *saveChanges;
     QAction *discardChanges;
     QAction* addNewSemester;
+    QAction* calculate_gpa;
+
+    QPushButton *insertBtn;
+    QPushButton *deleteBtn;
 
     Student* student_profile;
     std::vector<Subject*> student_subejects;
