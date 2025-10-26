@@ -22,7 +22,6 @@ MySqlite_db::MySqlite_db() {
         QMessageBox::information(nullptr, "Database connection", "success...");
 
 
-
 }
 
 // --- This instance communicates with the business layer
@@ -52,7 +51,6 @@ bool MySqlite_db::status()
     qDebug() << "Error: " << db_connection.lastError();
     return false;
 
-
 }
 
 // --- Disconnection
@@ -61,8 +59,6 @@ void MySqlite_db::disconnect() {
         this->db_connection.close();
     }
 }
-
-
 
 /// ----------------------------------- GPA Student functionality ---------------------
 ///
@@ -217,7 +213,7 @@ bool MySqlite_db::delete_subject(int &id)
 
 /// Update Student ects
 
-bool MySqlite_db::update_student_gpa(const int &id, const float ects)
+bool MySqlite_db::update_student_gpa(const int &id, const double ects)
 {
 
     if(id < 0 )
@@ -238,6 +234,143 @@ bool MySqlite_db::update_student_gpa(const int &id, const float ects)
     return true;
 
 
+}
+
+bool MySqlite_db::update_student_name(const int &id, const QString &new_name)
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("update students set fullname=:e where ID=:id");
+    q.bindValue(":e", new_name);
+    q.bindValue(":id", id);
+
+    if(!q.exec())
+    {
+        qWarning() << "Error Updating subject ect" << q.lastError().text();
+        return false;
+    }
+    QMessageBox::information(nullptr, "Updated Student password", "success");
+    return true;
+
+}
+
+bool MySqlite_db::update_student_email(const int &id, const QString &email)
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("update students set email=:e where ID=:id");
+    q.bindValue(":e", email);
+    q.bindValue(":id", id);
+
+    if(!q.exec())
+    {
+        qWarning() << "Error Updating Student Email " << q.lastError().text();
+        return false;
+    }
+    QMessageBox::information(nullptr, "Updated Student Email", "success");
+    return true;
+
+
+}
+
+bool MySqlite_db::update_student_password(const int &id, const QString &pw)
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("update students set password=:e where id=:id");
+    q.bindValue(":pw", pw);
+    q.bindValue(":id", id);
+
+    if(!q.exec())
+    {
+        qWarning() << "Error Updating subject ect" << q.lastError().text();
+        return false;
+    }
+    QMessageBox::information(nullptr, "Updated Student password", "success");
+    return true;
+
+
+}
+
+bool MySqlite_db::update_subject_ect(const int &id, const double &ects)
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("update subjects set ects=:e where subject_id=:id");
+    q.bindValue(":e", ects);
+    q.bindValue(":id", id);
+
+    if(!q.exec())
+    {
+        qWarning() << "Error Updating subject ect" << q.lastError().text();
+        return false;
+    }
+    qDebug() << "Updating Ects of a Subject" << q.value("subject_ects").toString() << "to " << ects;
+    return true;
+
+}
+
+bool MySqlite_db::update_subject_weights(const int &id, const int &new_weight)
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("update subjects set weights=:nw where subject_id=:id");
+    q.bindValue(":nw", new_weight);
+    q.bindValue(":id", id);
+    if(!q.exec())
+    {
+        qWarning() << "Error Updating weights : " << q.lastError().text();
+        return false;
+
+    }
+    qDebug() << "Updating subject_id" << id << "to weight" << new_weight;
+    return true;
+}
+
+int MySqlite_db::get_sudent_id(const QString &email)
+{
+
+    QSqlQuery qry(this->db_connection);
+    qry.prepare("SELECT id FROM students WHERE email = :email");
+    qry.bindValue(":email", email);
+    if (!qry.exec()) {
+        qWarning() << "Query failed:" << qry.lastError().text();
+        return -1;
+    }
+    if (qry.next()) {
+        return qry.value("id").toInt();
+    }
+    return -1; // Kein Treffer
+}
+
+
+int MySqlite_db::get_subject_id(const int &student_id, const QString& subject_name)
+{
+    QSqlQuery qry(this->db_connection);
+    qry.prepare("select subject_id, student_id, subject_name, subject_weights, subject_ects from subjects where student_id=:id and subject_name=:subject");
+    qry.bindValue(":id", student_id);
+    qry.bindValue(":subject", subject_name);
+    if(!qry.exec())
+    {
+        qWarning() << "Query failed:" << qry.lastError().text();
+        return -1;
+    }
+    // retrive id
+    if (qry.next()) {
+        return qry.value("id").toInt();
+    }
+    return -1;
+}
+
+int MySqlite_db::get_admin_id(const QString &email)
+{
+
+    QSqlQuery q(this->db_connection);
+    q.prepare("select admin_id from admins where email= :email");
+    q.bindValue(":email", email);
+    if(!q.exec())
+    {
+        qWarning() << "Error Getting admin ID " << q.lastError().text();
+        return -1;
+    }
+    if(q.next())
+        return q.value("admin_id").toInt();
+    return -1;
 }
 
 QSqlQuery MySqlite_db::get_student_subjects(int &sid) const
@@ -289,6 +422,20 @@ query MySqlite_db::get_student_info(int &id, str &choice)
             QMessageBox::warning(nullptr, "Student Info error", q.lastError().text());
     }
 
+    return q;
+
+}
+
+query MySqlite_db::get_student_subjects(int &id)
+{
+    QSqlQuery q(this->db_connection);
+    q.prepare("Select subject_name, subject_weights, subject_ects from subjects where student_id=:id");
+    q.bindValue(":id", id);
+    if(!q.exec())
+    {
+        qWarning() << "Error Getting all student Subjects: " << q.lastError().text();
+        return q;
+    }
     return q;
 
 }
