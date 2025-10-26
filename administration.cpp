@@ -235,7 +235,6 @@ bool Administration::register_student(Courses& course, QString &name, QDate &geb
     }
     QMessageBox::information(nullptr, "Registration Status", "success");
     return true;
-
 }
 bool Administration::delete_student(int &id){
     if(id < 0 )
@@ -247,28 +246,54 @@ bool Administration::delete_student(int &id){
     ok = db->delete_student(id);
     if(ok)
         return ok;
-
-
     return ok;
 
 }
 
-
 bool Administration::update_student_name(int& id, QString new_name){
 
 
+    if(id < 0)
+    {
+        QMessageBox::warning(nullptr, "Update Student name", "Invalid ID");
+        return false;
+    }
+
+    if(this->db->update_student_name(id, new_name))
+        return true;
+    return false;
 
 }
 
 
 bool Administration::update_subject_ect(int& id, double& ects){
 
+    if(id < 0)
+    {
+        QMessageBox::warning(nullptr, "Update Subject ects", "Invalid ID");
+        return false;
+    }
+
+    if(this->db->update_subject_ect(id, ects));
+        return true;
+    return false;
 }
 bool Administration::update_subject_name(int& id, QString& new_name){
+
+
 
 }
 bool Administration::update_subject_weights(int& id ,double new_weights){
 
+    if(id < 0)
+    {
+        QMessageBox::warning(nullptr, "Update Subject weights", "Invalid ID");
+        return false;
+    }
+
+    if(this->db->update_subject_weights(id, new_weights))
+        return true;
+    return false;
 
 }
 
@@ -277,7 +302,6 @@ std::vector<Subject *> Administration::get_student_subjects(int student_id)
 {
     query q = db->get_student_subjects(student_id);
     return S_sql(q);
-
 }
 
 bool Administration::check_email(QString &email, QString table)
@@ -385,7 +409,3 @@ void Administration::create_table()
 {
     //this->db->build_create_table_sql();
 }
-
-
-
-// subjects
