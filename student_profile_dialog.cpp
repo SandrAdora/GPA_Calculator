@@ -25,6 +25,10 @@ student_profile_Dialog::student_profile_Dialog(Student* s, std::vector<Subject*>
 student_profile_Dialog::~student_profile_Dialog()
 {
     delete ui;
+    delete this->signOut;
+    delete discardChanges;
+    delete addNewSemester;
+    delete calculate_gpa;
 }
 
 void student_profile_Dialog::studentMenuBar()
@@ -36,14 +40,17 @@ void student_profile_Dialog::studentMenuBar()
     saveChanges = new QAction(QIcon(":/icons/documentation/logos/save_changes.jpg"), "saveChanges", this);
     discardChanges = new QAction(QIcon(":/icons/documentation/logos/Delete-Icon-Transparent-PNG.png"), "discardChanges", this);
     addNewSemester = new QAction(QIcon(":/icons/documentation/logos/semester-icon-vector.jpg"), "add new semester", this);
+    calculate_gpa = new QAction(QIcon(":/icons/documentation/logos/semester-icon-vector.jpg"), "calculate GPA", this );
 
     // Connect actions to respective methods
     connect(signOut, &QAction::triggered, this, &student_profile_Dialog::on_actionsignout_triggered);
     connect(saveChanges, &QAction::triggered, this, &student_profile_Dialog::on_actionsaveChanges_triggered);
     connect(discardChanges, &QAction::triggered, this, &student_profile_Dialog::on_actiondiscardChanges_triggered);
     connect(addNewSemester, &QAction::triggered, this, &student_profile_Dialog::on_actionnewSemester_triggered);
+    connect(calculate_gpa, &QAction::triggered, this, &student_profile_Dialog::on_actioncalculateGpa_triggered);
 
     // Add actions to menuebar
+    fileMenus->addAction(calculate_gpa);
     fileMenus->addAction(addNewSemester);
     fileMenus->addAction(discardChanges);
     fileMenus->addAction(saveChanges);
@@ -72,6 +79,25 @@ void student_profile_Dialog::on_actiondiscardChanges_triggered(){}
 void student_profile_Dialog::on_actionnewSemester_triggered()
 {
     QMessageBox::information(this, "Action add new Semester triggered", "success");
+}
+
+void student_profile_Dialog::on_actioncalculateGpa_triggered()
+{
+    QMessageBox::information(nullptr, "Calculate GPA", "ok");
+    // 1. Open a new Window
+    // 2. Window should make the inputs of subject name subject weight and result aswell as the ects available
+} // 3. window should return the input to theh student_profile_Dialog
+
+void student_profile_Dialog::on_insertBtn_clicked()
+{
+    QMessageBox::information(this, "Insert new Subjects", "ok");
+
+
+}
+
+void student_profile_Dialog::on_deleteBtn_clicked()
+{
+    QMessageBox::information(this, "Delete Subject ", "ok");
 }
 
 
@@ -136,8 +162,12 @@ void student_profile_Dialog::studentSubjectProfile()
     /// Horizontal Layout
     QHBoxLayout *horz = new QHBoxLayout;
 
-    QPushButton *insertBtn = new QPushButton(QIcon(":/icons/documentation/logos/insert-icon-17.jpg"), "Add");
-    QPushButton *deleteBtn = new QPushButton(QIcon(":/icons/documentation/logos/Delete-Icon-Transparent-PNG.png"), "Delete");
+    insertBtn = new QPushButton(QIcon(":/icons/documentation/logos/insert-icon-17.jpg"), "Add");
+    deleteBtn = new QPushButton(QIcon(":/icons/documentation/logos/Delete-Icon-Transparent-PNG.png"), "Delete");
+
+
+    connect(insertBtn, &QPushButton::clicked, this, &student_profile_Dialog::on_insertBtn_clicked );
+    connect(deleteBtn, &QPushButton::clicked, this, &student_profile_Dialog::on_deleteBtn_clicked );
     horz->addWidget(insertBtn);
     horz->addWidget(deleteBtn);
     scrollLayout->addWidget(listWidget);
